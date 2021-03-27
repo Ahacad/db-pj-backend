@@ -1,14 +1,6 @@
 const express = require("express");
-const https = require("https");
-const fs = require("fs");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 4000;
-
-const options = {
-  key: fs.readFileSync(__dirname + "/localhost-key.pem"),
-  cert: fs.readFileSync(__dirname + "/localhost.pem"),
-};
 
 app.use(bodyParser.json());
 app.use(
@@ -33,7 +25,4 @@ app.get("/users/:id", db.getUserById);
 //console.log(`app running on port ${port}`);
 //});
 
-const server = https.createServer(options, app);
-server.listen(port, () => {
-  console.log(`server running on port ${port}`);
-});
+module.exports = app;
