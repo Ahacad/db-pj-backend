@@ -8,7 +8,7 @@
 - [ ] detailed design of the database 
 - [ ] real-world meaning of the project
 
-- [ ] Docker 
+- [x] Docker 
 - [ ] deploy backend to cloud
 - [ ] deploy frontend to vercel
 

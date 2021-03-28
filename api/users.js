@@ -1,11 +1,3 @@
-const { Pool } = require("pg");
-const pool = new Pool({
-  user: "ahacad",
-  host: "localhost",
-  database: "api",
-  port: 5432,
-});
-
 const getUsers = (req, resp) => {
   pool.query("SELECT * FROM users ORDER BY id ASC", (err, res) => {
     if (err) {
@@ -62,7 +54,12 @@ const deleteUser = (req, resp) => {
   });
 };
 
-module.exports = {
+const authClient = {
   getUsers,
   getUserById,
+  getUserByName,
+  createUser,
+  deleteUser,
 };
+
+module.exports = authClient;
