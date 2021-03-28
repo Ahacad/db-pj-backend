@@ -9,6 +9,8 @@
 - [ ] real-world meaning of the project
 
 - [ ] Docker 
+- [ ] deploy backend to cloud
+- [ ] deploy frontend to vercel
 
 ## 项目说明
 
