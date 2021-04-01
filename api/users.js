@@ -1,5 +1,5 @@
 const getUsers = (req, resp) => {
-  pool.query("SELECT * FROM user ORDER BY id ASC", (err, res) => {
+  pool.query('SELECT * FROM user ORDER BY id ASC', (err, res) => {
     if (err) {
       throw err;
     }
@@ -8,9 +8,9 @@ const getUsers = (req, resp) => {
 };
 
 const getUserById = (req, resp) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
 
-  pool.query("SELECT * FROM user WHERE id = $1", [id], (err, res) => {
+  pool.query('SELECT * FROM user WHERE id = $1', [id], (err, res) => {
     if (err) {
       throw err;
     }
@@ -19,9 +19,9 @@ const getUserById = (req, resp) => {
 };
 
 const getUserByName = (req, resp) => {
-  const name = req.params.name;
+  const { name } = req.params;
 
-  pool.query("SELECT * FROM user WHERE name = $1", [name], (err, res) => {
+  pool.query('SELECT * FROM user WHERE name = $1', [name], (err, res) => {
     if (err) {
       throw err;
     }
@@ -30,8 +30,8 @@ const getUserByName = (req, resp) => {
 };
 
 const getUserByEmail = (req, resp) => {
-  const email = req.params.email;
-  pool.query("SELECT * FROM user WHERE email = $1", [email], (err, res) => {
+  const { email } = req.params;
+  pool.query('SELECT * FROM user WHERE email = $1', [email], (err, res) => {
     if (err) {
       throw err;
     }
@@ -40,24 +40,26 @@ const getUserByEmail = (req, resp) => {
 };
 
 const createUser = (req, resp) => {
-  const { name, password, email, create_time } = req.body;
+  const {
+    name, password, email, createTime,
+  } = req.body;
   pool.query(
-    "INSERT INTO user (name, email, password, create_time) VALUES ($1, $2, $3, $4)",
+    'INSERT INTO user (name, email, password, create_time) VALUES ($1, $2, $3, $4)',
     // TODO: salt password
-    [name, email, password, create_time],
+    [name, email, password, createTime],
     (err, res) => {
       if (err) {
         throw err;
       }
       resp.status(201).send(`user inserted, id: ${res.insertId}`);
-    }
+    },
   );
 };
 
 const updateUser = (req, resp) => {
-  const id = parseInt(req.params.id);
-  const { name, bio } = request.body;
-  pool.query("UPDATE user SET name = $1, bio = $2", [name, bio], (err, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { name, bio } = req.body;
+  pool.query('UPDATE user SET name = $1, bio = $2', [name, bio], (err, res) => {
     if (err) {
       throw err;
     }
@@ -66,9 +68,9 @@ const updateUser = (req, resp) => {
 };
 
 const deleteUser = (req, resp) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
 
-  pool.query("DELETE FROM user WHERE id = $1", [id], (err, res) => {
+  pool.query('DELETE FROM user WHERE id = $1', [id], (err, res) => {
     if (err) {
       throw err;
     }
@@ -76,7 +78,7 @@ const deleteUser = (req, resp) => {
   });
 };
 
-const authClient = {
+const usersClient = {
   getUsers,
   getUserByEmail,
   createUser,
@@ -84,4 +86,4 @@ const authClient = {
   deleteUser,
 };
 
-module.exports = authClient;
+module.exports = usersClient;

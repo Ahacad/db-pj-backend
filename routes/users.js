@@ -1,7 +1,8 @@
-const { Router } = require("express");
+const { Router } = require('express');
+const usersClient = require('../api/users');
 
-const router = new Router();
+const users = new Router();
 
-router.get();
+users.post('/register', usersClient.createUser);
 
-module.exports = router;
+module.exports = users;
