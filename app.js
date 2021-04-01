@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mountRoutes = require('./routes');
 
 const app = express();
-const mountRoutes = require('./routes');
 
 app.use(bodyParser.json());
 app.use(
