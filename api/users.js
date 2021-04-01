@@ -55,18 +55,14 @@ const createUser = (req, resp) => {
 };
 
 const updateUser = (req, resp) => {
-  const id = parseInt(request.params.id);
+  const id = parseInt(req.params.id);
   const { name, bio } = request.body;
-  pool.query(
-    "UPDATE user SET name = $1, bio = $2",
-    [name, bio],
-    (err, resp) => {
-      if (err) {
-        throw err;
-      }
-      resp.status(200).send(`user ${id} info updated`);
+  pool.query("UPDATE user SET name = $1, bio = $2", [name, bio], (err, res) => {
+    if (err) {
+      throw err;
     }
-  );
+    resp.status(200).send(`user ${id} info updated`);
+  });
 };
 
 const deleteUser = (req, resp) => {
