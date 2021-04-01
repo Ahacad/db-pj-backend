@@ -1,5 +1,5 @@
 const getUsers = (req, resp) => {
-  pool.query("SELECT * FROM users ORDER BY id ASC", (err, res) => {
+  pool.query("SELECT * FROM user ORDER BY id ASC", (err, res) => {
     if (err) {
       throw err;
     }
@@ -10,7 +10,7 @@ const getUsers = (req, resp) => {
 const getUserById = (req, resp) => {
   const id = parseInt(req.params.id);
 
-  pool.query("SELECT * FROM users WHERE id = $1", [id], (err, res) => {
+  pool.query("SELECT * FROM user WHERE id = $1", [id], (err, res) => {
     if (err) {
       throw err;
     }
@@ -21,7 +21,17 @@ const getUserById = (req, resp) => {
 const getUserByName = (req, resp) => {
   const name = req.params.name;
 
-  pool.query("SELECT * FROM users WHERE name = $1", [name], (err, res) => {
+  pool.query("SELECT * FROM user WHERE name = $1", [name], (err, res) => {
+    if (err) {
+      throw err;
+    }
+    resp.status(200).json(res.rows);
+  });
+};
+
+const getUserByEmail = (req, resp) => {
+  const email = req.params.email;
+  pool.query("SELECT * FROM user WHERE email = $1", [email], (err, res) => {
     if (err) {
       throw err;
     }
@@ -30,10 +40,11 @@ const getUserByName = (req, resp) => {
 };
 
 const createUser = (req, resp) => {
-  const { name, email } = req.body;
+  const { name, password, email, create_time } = req.body;
   pool.query(
-    "INSERT INTO users (name, email) VALUES ($1, $2)",
-    [name, email],
+    "INSERT INTO user (name, email, password, create_time) VALUES ($1, $2, $3, $4)",
+    // TODO: salt password
+    [name, email, password, create_time],
     (err, res) => {
       if (err) {
         throw err;
@@ -43,10 +54,25 @@ const createUser = (req, resp) => {
   );
 };
 
+const updateUser = (req, resp) => {
+  const id = parseInt(request.params.id);
+  const { name, bio } = request.body;
+  pool.query(
+    "UPDATE user SET name = $1, bio = $2",
+    [name, bio],
+    (err, resp) => {
+      if (err) {
+        throw err;
+      }
+      resp.status(200).send(`user ${id} info updated`);
+    }
+  );
+};
+
 const deleteUser = (req, resp) => {
   const id = parseInt(req.params.id);
 
-  pool.query("DELETE FROM users WHERE id = $1", [id], (err, res) => {
+  pool.query("DELETE FROM user WHERE id = $1", [id], (err, res) => {
     if (err) {
       throw err;
     }
@@ -56,9 +82,9 @@ const deleteUser = (req, resp) => {
 
 const authClient = {
   getUsers,
-  getUserById,
-  getUserByName,
+  getUserByEmail,
   createUser,
+  updateUser,
   deleteUser,
 };
 
