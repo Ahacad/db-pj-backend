@@ -3,13 +3,14 @@
 ### TODOS
 
 - [ ] decide what the project is about: (a forum, perhaps)
+- [ ] learn jest, supertest, make unit tests working
 
 - [ ] authentication for different **types** of users
 - [ ] detailed design of the database 
 - [ ] real-world meaning of the project
 
 - [x] Docker 
-- [ ] deploy backend to cloud
+- [x] deploy backend to cloud (no need anymore with docker)
 - [ ] deploy frontend to vercel
 
 ## 项目说明
@@ -30,7 +31,7 @@
 (可能需要 root 权限) 启动 postgresql 镜像，再输入下面一行命令导入数据。
 
 ```bash
-PGPASSWORD=root psql -d api -U ahacad -f infile.sql -h localhost
+PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
 ```
 
 ##### 2. 启动后端
