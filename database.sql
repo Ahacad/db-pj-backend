@@ -5,6 +5,7 @@ CREATE TABLE users (
     password varchar(1000),
     bio varchar(60),
     create_time timestamp,
+    user_type smallint,
     PRIMARY KEY(id)
 );
 
@@ -17,6 +18,7 @@ CREATE TABLE posts (
     likecount int,
     reply_userid int,
     last_reply_time timestamp
+    content_id int
 );
 
 CREATE TABLE contents (
@@ -29,5 +31,6 @@ CREATE TABLE replies (
     userid int,
     post_id int,
     reply_time timestamp,
-    likecount int
+    likecount int,
+    content_id int
 );
