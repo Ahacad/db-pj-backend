@@ -54,7 +54,7 @@ const createUser = (req, resp) => {
     name, password, email, createTime,
   } = req.body;
   pool.query(
-    'INSERT INTO user (name, email, password, create_time) VALUES ($1, $2, $3, $4)',
+    'INSERT INTO users (name, email, password, create_time) VALUES ($1, $2, $3, $4)',
     // TODO: salt password
     [name, email, password, createTime],
     (err, res) => {

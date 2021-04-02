@@ -4,7 +4,7 @@ CREATE TABLE users (
     email varchar(40),
     password varchar(64),
     bio varchar(60),
-    create_at timestamp,
+    create_time timestamp,
     PRIMARY KEY(id)
 );
 
