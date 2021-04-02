@@ -2,7 +2,7 @@ CREATE TABLE users (
     id SERIAL UNIQUE,
     name varchar(40),
     email varchar(40),
-    password varchar(64),
+    password varchar(1000),
     bio varchar(60),
     create_time timestamp,
     PRIMARY KEY(id)
