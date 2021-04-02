@@ -6,4 +6,4 @@ FROM node:14-alpine
 WORKDIR /app
 COPY --from=build /usr/src/app /app
 EXPOSE 4000
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

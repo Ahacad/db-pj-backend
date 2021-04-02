@@ -37,10 +37,49 @@ PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
 
 ##### 2. 启动后端
 
+```bash
+docker build -t expressapp .         
+```
+
 
 #### 后端 API 列表
 
-##### 
+##### users 
+
+###### `POST /users/register`
+
+```typescript
+interface Request {
+  name: string;
+  email: string;
+  password: string
+}
+```
+
+###### `POST /users/update/:id`
+
+```typescript
+interface Request {
+  name: string;
+  bio: string;
+}
+```
+
+###### `DELETE /users/delete/:id`
+
+```typescript
+interface Request {
+}
+```
+
+###### `POST /users/login` 
+
+```typescript
+interface Request {
+  email: string;
+  password: string;
+}
+```
 
 ### 前端
 
