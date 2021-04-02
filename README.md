@@ -3,6 +3,7 @@
 ### TODOS
 
 - [ ] decide what the project is about: (a forum, perhaps)
+- [ ] read about the project requirement specifications
 - [ ] learn jest, supertest, make unit tests working
 
 - [ ] authentication for different **types** of users

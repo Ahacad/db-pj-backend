@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const crypto = require('crypto');
 
 const pool = new Pool({
   user: 'ahacad',
@@ -7,6 +8,8 @@ const pool = new Pool({
   database: 'api',
   port: 5432,
 });
+
+const salt = crypto.randomBytes(16).toString('hex');
 
 const getUsers = (req, resp) => {
   pool.query('SELECT * FROM user ORDER BY id ASC', (err, res) => {
@@ -53,10 +56,13 @@ const createUser = (req, resp) => {
   const {
     name, password, email, createTime,
   } = req.body;
+  const saltedPassword = crypto
+    .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
+    .toString('hex');
   pool.query(
     'INSERT INTO users (name, email, password, create_time) VALUES ($1, $2, $3, $4)',
     // TODO: salt password
-    [name, email, password, createTime],
+    [name, email, saltedPassword, createTime],
     (err, res) => {
       if (err) {
         console.error(err);
