@@ -10,6 +10,7 @@ const pool = new Pool({
 });
 
 // const salt = crypto.randomBytes(16).toString('hex');
+// TODO: change salt to rnadom string or secret in runtime
 const salt = 'helloworld';
 
 const getUsers = (req, resp) => {
@@ -82,13 +83,13 @@ const createUser = (req, resp) => {
     .toString('hex');
   // TODO: one email only
   pool.query(
-    'INSERT INTO users (name, email, password, create_time) VALUES ($1, $2, $3, $4);',
+    'INSERT INTO users (name, email, password, create_time) VALUES ($1, $2, $3, $4) RETURNING id;',
     [name, email, saltedPassword, createTime],
     (err, res) => {
       if (err) {
         console.error(err);
       }
-      resp.status(201).send('user inserted');
+      resp.status(201).json(res.rows[0]);
     },
   );
 };
