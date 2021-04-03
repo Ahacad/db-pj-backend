@@ -10,20 +10,22 @@ CREATE TABLE users (
 );
 
 CREATE TABLE posts (
-    id int,
+    id SERIAL UNIQUE,
     userid int,
     title varchar(60),
     create_time timestamp,
     replycount int,
     likecount int,
     reply_userid int,
-    last_reply_time timestamp
-    content_id int
+    last_reply_time timestamp,
+    content_id int,
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE contents (
-    id int, 
-    content varchar(10000)
+    id SERIAL UNIQUE, 
+    content varchar(10000),
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE replies (
