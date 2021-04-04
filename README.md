@@ -2,14 +2,19 @@
 
 ### TODOS
 
-- [ ] decide what the project is about: (a forum, perhaps)
-- [ ] read about the project requirement specifications
+#### General
+- [x] decide what the project is about: (a forum, perhaps)
+- [x] read about the project requirement specifications (CRUD, usable,
+  authority)
 - [ ] learn jest, supertest, make unit tests working
-
-- [ ] authentication for different **types** of users
-- [ ] detailed design of the database 
 - [ ] real-world meaning of the project
+- [ ] detailed design of the database 
 
+#### Backend
+- [ ] data pagination
+- [ ] authentication for different **types** of users
+
+#### Deployment
 - [x] Docker 
 - [x] deploy backend to cloud (no need anymore with docker)
 - [ ] deploy frontend to vercel
