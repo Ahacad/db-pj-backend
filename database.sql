@@ -26,8 +26,8 @@ CREATE TABLE posts (
     last_reply_time timestamp,
     content_id int,
     PRIMARY KEY(id),
-    FOREIGN KEY(userid) REFERENCES users(id)
-    FOREIGN KEY(content_id) REFERENCES contents(id),
+    FOREIGN KEY(userid) REFERENCES users(id),
+    FOREIGN KEY(content_id) REFERENCES contents(id)
 );
 
 
@@ -55,7 +55,7 @@ INSERT INTO contents (content) VALUES ('content2');
 INSERT INTO contents (content) VALUES ('content3');
 INSERT INTO contents (content) VALUES ('content4');
 
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 1, 'title1')
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 2, 'title2')
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 3, 'title3')
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 4, 'title4')
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 1, 'title1');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 2, 'title2');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 3, 'title3');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 4, 'title4');
