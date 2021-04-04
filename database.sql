@@ -2,7 +2,7 @@ CREATE TABLE users (
     id SERIAL UNIQUE,
     name varchar(40),
     email varchar(40),
-    password varchar(1000),
+    password varchar(1000) NOT NULL,
     bio varchar(60),
     create_time timestamp,
     user_type smallint,
@@ -19,7 +19,9 @@ CREATE TABLE posts (
     reply_userid int,
     last_reply_time timestamp,
     content_id int,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    FOREIGN KEY(content_id) REFERENCES contents(id)
+    FOREIGN KEY(userid) REFERENCES users(id)
 );
 
 CREATE TABLE contents (
@@ -29,10 +31,13 @@ CREATE TABLE contents (
 );
 
 CREATE TABLE replies (
-    id int,
+    id int SERIAL UNIQUE,
     userid int,
     post_id int,
     reply_time timestamp,
     likecount int,
-    content_id int
+    content_id int,
+    PRIMARY KEY(id),
+    FOREIGN KEY(content_id) REFERENCES contents(id),
+    FOREIGN KEY(post_id) REFERENCES posts(id)
 );
