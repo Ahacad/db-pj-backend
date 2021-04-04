@@ -1,15 +1,27 @@
 version: '3.8'
 services:
-    
     db:
         container_name: pg_container
         image: postgres
         restart: always
         environment:
-          POSTGRES_USER: ahacad
-          POSTGRES_PASSWORD: root
-          POSTGRES_DB: api
+            POSTGRES_USER: ahacad
+            POSTGRES_PASSWORD: root
+            POSTGRES_DB: api
         ports:
-          - "5432:5432"
+            - "5432:5432"
+        expose:
+            - 5432
         volumes:
-          - ./infile.sql:/infile
+            - ./infile.sql:/infile
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: express_backend:latest
+        ports:
+            - "4000:4000"
+        expose:
+            - 4000
+        links:
+            - db

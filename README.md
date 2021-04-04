@@ -32,23 +32,13 @@
 
 #### 启动服务 (docker)
 
-后端使用 docker 启动，分为数据库 postgresql 镜像和后端 express 服务镜像。
-
-##### 1. 启动数据库
-
 首先确认已经安装 docker 并启动，然后在后端文件目录下使用 `docker-compose up`
-(可能需要 root 权限) 启动 postgresql 镜像，再输入下面一行命令导入数据。
+(可能需要 root 权限) 启动数据库和后端服务；如果需要重新打包后端的话使用
+`docker-compose build`。再输入下面一行命令导入数据。
 
 ```bash
 PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
 ```
-
-##### 2. 启动后端
-
-```bash
-docker build -t expressapp .         
-```
-
 
 #### 后端 API 列表
 
