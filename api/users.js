@@ -5,56 +5,13 @@ const pool = require('../pool');
 // TODO: change salt to rnadom string or secret in runtime
 const salt = 'helloworld';
 
-// TODO: rewrite and test all connections using pooling clientss
-
-const getUsers = (req, resp) => {
+const getUsers = (_, resp) => {
   pool
     .connect()
     .then((client) => client.query('SELECT * FROM users ORDER BY id ASC').then((res) => {
       client.release();
       resp.status(200).json(res.rows);
     }))
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const getUserById = (req, resp) => {
-  const id = parseInt(req.params.id, 10);
-  pool
-    .connect()
-    .then((client) => client.query('SELECT * FROM user WHERE id = $1', [id]).then((res) => {
-      client.release();
-      resp.status(200).json(res.rows);
-    }))
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const getUserByName = (req, resp) => {
-  const { name } = req.params;
-  pool
-    .connect()
-    .then((client) => client.query('SELECT * FROM user WHERE name = $1', [name]).then((res) => {
-      client.release();
-      resp.status(200).json(res.rows);
-    }))
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
-const getUserByEmail = (req, resp) => {
-  const { email } = req.params;
-  pool
-    .connect()
-    .then((client) => client
-      .query('SELECT * FROM user WHERE email = $1', [email])
-      .then((res) => {
-        client.release();
-        resp.status(200).json(res.rows);
-      }))
     .catch((err) => {
       console.error(err);
     });
@@ -119,14 +76,13 @@ const updateUser = (req, resp) => {
   pool
     .connect()
     .then((client) => client
-      .query('UPDATE users SET name = $1, bio = $2 WHERE id = $3;', [
-        name,
-        bio,
-        id,
-      ])
+      .query(
+        'UPDATE users SET name = $1, bio = $2 WHERE id = $3 RETURNING id;',
+        [name, bio, id],
+      )
       .then((res) => {
         client.release();
-        resp.status(200).send(`user ${id} info updated`);
+        resp.status(200).send(`${res.rows}`);
       }))
     .catch((err) => {
       console.error(err);
@@ -138,22 +94,64 @@ const deleteUser = (req, resp) => {
 
   pool
     .connect()
-    .then((client) => client.query('DELETE FROM users WHERE id = $1;', [id]).then((res) => {
-      client.release();
-      resp.status(200).send(`user deleted, id: ${id}`);
-    }))
+    .then((client) => client
+      .query('DELETE FROM users WHERE id = $1 RETURNING id;', [id])
+      .then((res) => {
+        client.release();
+        resp.status(200).send(`${res.rows}`);
+      }))
     .catch((err) => {
       console.error(err);
     });
 };
 
+// const getUserByEmail = (req, resp) => {
+// const { email } = req.params;
+// pool
+// .connect()
+// .then((client) => client
+// .query('SELECT * FROM user WHERE email = $1', [email])
+// .then((res) => {
+// client.release();
+// resp.status(200).json(res.rows);
+// }))
+// .catch((err) => {
+// console.error(err);
+// });
+// };
+
+// const getUserById = (req, resp) => {
+// const id = parseInt(req.params.id, 10);
+// pool
+// .connect()
+// .then((client) => client.query('SELECT * FROM user WHERE id = $1', [id]).then((res) => {
+// client.release();
+// resp.status(200).json(res.rows);
+// }))
+// .catch((err) => {
+// console.error(err);
+// });
+// };
+
+// const getUserByName = (req, resp) => {
+// const { name } = req.params;
+// pool
+// .connect()
+// .then((client) => client.query('SELECT * FROM user WHERE name = $1', [name]).then((res) => {
+// client.release();
+// resp.status(200).json(res.rows);
+// }))
+// .catch((err) => {
+// console.error(err);
+// });
+// };
+
 const usersClient = {
-  getUsers,
-  getUserByEmail,
-  login,
   createUser,
+  login,
   updateUser,
   deleteUser,
+  getUsers,
 };
 
 module.exports = usersClient;
