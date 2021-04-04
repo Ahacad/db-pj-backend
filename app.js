@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const mountRoutes = require('./routes');
 
 const app = express();
@@ -21,4 +22,5 @@ app.get('/', (req, resp) => {
 });
 
 mountRoutes(app);
+
 module.exports = app;

@@ -1,25 +1,22 @@
-const { Pool } = require('pg');
 const crypto = require('crypto');
 
-const pool = new Pool({
-  user: 'ahacad',
-  password: 'root',
-  host: 'localhost',
-  database: 'api',
-  port: 5432,
-});
-
+const pool = require('../bin/www');
 // const salt = crypto.randomBytes(16).toString('hex');
 // TODO: change salt to rnadom string or secret in runtime
 const salt = 'helloworld';
 
+// TODO: rewrite and test all connections using pooling clientss
+
 const getUsers = (req, resp) => {
-  pool.query('SELECT * FROM user ORDER BY id ASC', (err, res) => {
-    if (err) {
+  pool
+    .connect()
+    .then((client) => client.query('SELECT * FROM users ORDER BY id ASC').then((res) => {
+      client.release();
+      resp.status(200).json(res.rows);
+    }))
+    .catch((err) => {
       console.error(err);
-    }
-    resp.status(200).json(res.rows);
-  });
+    });
 };
 
 const getUserById = (req, resp) => {
