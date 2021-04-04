@@ -26,7 +26,10 @@ const addPost = async (req, resp) => {
 const getPosts = async (req, resp) => {
   const client = await pool.connect();
   try {
-    const res = await client.query('SELECT * FROM posts;');
+    const res = await client.query(
+      'SELECT posts.*, contents.content FROM posts, contents WHERE posts.content_id = contents.id;',
+    );
+
     resp.status(200).json(res.rows);
   } catch (err) {
     console.error(err);

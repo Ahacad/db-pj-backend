@@ -95,6 +95,24 @@ interface Request {
 }
 ```
 
+###### `GET /posts`
+
+```typescript
+interface Request {
+}
+
+interface Response {
+  userid: number;
+  title: string;
+  create_time: string;
+  replycount: number;
+  likecount: number;
+  reply_userid: number;
+  last_reply_time: string;
+  content: string;
+}
+```
+
 ##### posts
 
 
