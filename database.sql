@@ -9,6 +9,12 @@ CREATE TABLE users (
     PRIMARY KEY(id)
 );
 
+CREATE TABLE contents (
+    id SERIAL UNIQUE, 
+    content varchar(10000),
+    PRIMARY KEY(id)
+);
+
 CREATE TABLE posts (
     id SERIAL UNIQUE,
     userid int,
@@ -20,18 +26,13 @@ CREATE TABLE posts (
     last_reply_time timestamp,
     content_id int,
     PRIMARY KEY(id),
-    FOREIGN KEY(content_id) REFERENCES contents(id)
+    FOREIGN KEY(content_id) REFERENCES contents(id),
     FOREIGN KEY(userid) REFERENCES users(id)
 );
 
-CREATE TABLE contents (
-    id SERIAL UNIQUE, 
-    content varchar(10000),
-    PRIMARY KEY(id)
-);
 
 CREATE TABLE replies (
-    id int SERIAL UNIQUE,
+    id SERIAL UNIQUE,
     userid int,
     post_id int,
     reply_time timestamp,
