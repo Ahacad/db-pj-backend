@@ -1,6 +1,6 @@
 const crypto = require('crypto');
+const pool = require('../pool');
 
-const pool = require('../bin/www');
 // const salt = crypto.randomBytes(16).toString('hex');
 // TODO: change salt to rnadom string or secret in runtime
 const salt = 'helloworld';

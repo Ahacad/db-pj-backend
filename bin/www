@@ -3,20 +3,7 @@
 const https = require('https');
 const fs = require('fs');
 
-/*
- *postgresql pooling
- */
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  user: 'ahacad',
-  password: 'root',
-  host: 'localhost',
-  database: 'api',
-  port: 5432,
-});
-module.exports = pool;
-
+const pool = require('../pool');
 /*
  *start server
  */

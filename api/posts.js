@@ -1,4 +1,4 @@
-const pool = require('../bin/www');
+const pool = require('../pool');
 
 const addPost = (req, resp) => {
   const { userid, title, content } = req.body;
