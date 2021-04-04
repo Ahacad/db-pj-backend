@@ -56,6 +56,14 @@ interface Request {
 }
 ```
 
+###### `POST /users/login` 
+
+```typescript
+interface Request {
+  email: string;
+  password: string;
+}
+```
 ###### `POST /users/update/:id`
 
 ```typescript
@@ -72,12 +80,15 @@ interface Request {
 }
 ```
 
-###### `POST /users/login` 
+##### posts
+
+###### `POST /posts/new`
 
 ```typescript
 interface Request {
-  email: string;
-  password: string;
+  userId: string;
+  title: string;
+  content: string;
 }
 ```
 
