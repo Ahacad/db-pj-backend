@@ -3,10 +3,12 @@
  */
 const { Pool } = require('pg');
 
+require('dotenv').config();
+
 const pool = new Pool({
   user: 'ahacad',
   password: 'root',
-  host: 'db',
+  host: process.env.DB_HOST,
   database: 'api',
   port: 5432,
 });
