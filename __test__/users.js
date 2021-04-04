@@ -1,7 +1,7 @@
 const supertest = require('supertest');
 const app = require('../app');
 
-describe('users API', () => {
+const users = () => {
   it('add user', async () => {
     const resp = await supertest(app).post('/users/register').send({
       name: 'baha',
@@ -26,4 +26,6 @@ describe('users API', () => {
     console.log('login will be tested manually');
     expect(2).toBe(2);
   });
-});
+};
+
+module.exports = users;

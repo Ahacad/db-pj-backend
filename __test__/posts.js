@@ -1,7 +1,7 @@
 const supertest = require('supertest');
 const app = require('../app');
 
-describe('posts API', () => {
+const posts = () => {
   it('add post', async () => {
     const resp = await supertest(app).post('/posts/new').send({
       userId: '1',
@@ -15,4 +15,6 @@ describe('posts API', () => {
     console.log(resp.body);
     expect(resp.status).toBe(200);
   });
-});
+};
+
+module.exports = posts;
