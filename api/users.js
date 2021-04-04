@@ -49,7 +49,7 @@ const createUser = (req, resp) => {
   const saltedPassword = crypto
     .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
     .toString('hex');
-  // TODO: one email only
+  // TODO: there can only be one distinct email in database
   pool
     .connect()
     .then((client) => client

@@ -27,7 +27,7 @@ const getPosts = async (req, resp) => {
   const client = await pool.connect();
   try {
     const res = await client.query(
-      'SELECT posts.*, contents.content FROM posts, contents WHERE posts.content_id = contents.id;',
+      'SELECT posts.*, contents.content, users.name FROM posts, contents, users WHERE posts.content_id = contents.id AND posts.userid = users.id;',
     );
 
     resp.status(200).json(res.rows);
@@ -38,7 +38,9 @@ const getPosts = async (req, resp) => {
   }
 };
 
-// TODO: delete this part after finishing api
+// TODO: deletePost api
+
+// FIXME: delete this part after finishing api
 // const client = await pool.connect();
 // try {
 // } catch (err) {

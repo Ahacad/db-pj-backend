@@ -19,6 +19,8 @@ services:
             context: .
             dockerfile: Dockerfile
         image: express_backend:latest
+        environment:
+            - DB_HOST=db
         ports:
             - "4000:4000"
         expose:
