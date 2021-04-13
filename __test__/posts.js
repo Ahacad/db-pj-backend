@@ -2,9 +2,17 @@ const supertest = require('supertest');
 const app = require('../app');
 
 const posts = () => {
+  it('delete posts', async () => {
+    const resp = await supertest(app).post('/posts/delete').send({
+      userId: 1,
+      postId: 1,
+    });
+    expect(resp.status).toBe(200);
+  });
   it('add post', async () => {
     const resp = await supertest(app).post('/posts/new').send({
-      userId: '1',
+      id: 1,
+      userId: 1,
       title: 'test post',
       content: 'hello testing',
     });
@@ -12,7 +20,6 @@ const posts = () => {
   });
   it('get posts', async () => {
     const resp = await supertest(app).get('/posts');
-    console.log(resp.body);
     expect(resp.status).toBe(200);
   });
 };

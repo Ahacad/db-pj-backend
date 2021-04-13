@@ -38,6 +38,67 @@ const getPosts = async (req, resp) => {
   }
 };
 
+const deletePost = async (req, resp) => {
+  const { userId, postId } = req.body;
+
+  const client = await pool.connect();
+  try {
+    const userType = await client.query(
+      'SELECT user_type FROM users WHERE id = $1;',
+      [userId],
+    );
+    if (userType === 0) {
+      // admin
+      const repliesContentId = await client.query(
+        'DELETE FROM replies WHERE post_id = $1 RETURNING content_id;',
+        [postId],
+      );
+      repliesContentId.rows.forEach(async (replyContentId) => {
+        await client.query('DELETE FROM contents WHERE id = $1;', [
+          replyContentId.content_id,
+        ]);
+      });
+      const postContentId = (
+        await client.query(
+          'DELETE FROM posts WHERE id = $1 RETURNING content_id;',
+          [postId],
+        )
+      ).rows[0].content_id;
+      client.query('DELETE FROM contents WHERE id = $1;', [postContentId]);
+      resp.status(200).send();
+    } else {
+      const postUserId = (
+        await client.query('SELECT userid FROM posts WHERE id = $1;', [postId])
+      ).rows[0].userid;
+      if (postUserId === userId) {
+        const repliesContentId = await client.query(
+          'DELETE FROM replies WHERE post_id = $1 RETURNING content_id;',
+          [postId],
+        );
+        repliesContentId.rows.forEach(async (replyContentId) => {
+          await client.query('DELETE FROM contents WHERE id = $1;', [
+            replyContentId.content_id,
+          ]);
+        });
+        const postContentId = (
+          await client.query(
+            'DELETE FROM posts WHERE id = $1 RETURNING content_id;',
+            [postId],
+          )
+        ).rows[0].content_id;
+        client.query('DELETE FROM contents WHERE id = $1;', [postContentId]);
+        resp.status(200).send();
+      } else {
+        resp.status(401).json(postUserId);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.release();
+  }
+};
+
 // TODO: deletePost api
 
 // FIXME: delete this part after finishing api
@@ -49,6 +110,6 @@ const getPosts = async (req, resp) => {
 // client.release();
 // }
 
-const postsClient = { getPosts, addPost };
+const postsClient = { getPosts, addPost, deletePost };
 
 module.exports = postsClient;
