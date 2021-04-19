@@ -48,11 +48,11 @@ CREATE TABLE replies (
 -- mock data
 
 -- users
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test1', 'test1@foo.com', 'test1', '2021-04-04T11:19:57.563Z', 1);
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test2', 'test2@foo.com', 'test2', '2021-04-04T11:19:57.563Z', 1);
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test3', 'test3@foo.com', 'test3', '2021-04-04T11:19:57.563Z', 1);
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test4', 'test4@foo.com', 'test4', '2021-04-04T11:19:57.563Z', 1);
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test5', 'test5@foo.com', 'test5', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test1', 'test1@foo.com', '5cd9c504f153b87f33ec38a69f7c36f175ff452b705dc72a5906f7bd0a1d138c777923200341a0ef03c55c86fb8ebe08df26dec9084f3b722e4318f1c8b8f1e2', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test2', 'test2@foo.com', '38b2d4bb61258c4a5646887f65b3f7c3ae2412812a735801edcf003ae41f7a3f943ea5adc105e0bac96f5a1cc490329889fcd6204568211221d490b849e52ec4', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test3', 'test3@foo.com', '35c403d3d680075ade37cf89d61e5ad4a5ba0314d84708d7d473ddcd7aa7b4eabed67ea7b4b6bd7e34636133d7169cee6759a966754b835b912cdbb7145d483d', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test4', 'test4@foo.com', '6fc584b985ef4eb261295a15610207a7a81a072a35371cb0e1728cb62661f0b8a64d251602feca0b8ff63a857ce7e76666beba842287166ac8f07da2a92462fd', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test5', 'test5@foo.com', '83d251a1f94b5ca97cb6169bb39f851a2efed29b312aa8f40b97ff106518f16d90a25346d0600e24795765227e1c430c027a56143e4c621cdbc04401c628d635', '2021-04-04T11:19:57.563Z', 1);
 
 -- contents
 INSERT INTO contents (content) VALUES ('content1');
