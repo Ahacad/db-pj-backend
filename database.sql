@@ -20,7 +20,7 @@ CREATE TABLE contents (
 CREATE TABLE posts (
     id SERIAL UNIQUE,
     userid int,
-    title varchar(60),
+    title varchar(200),
     create_time timestamp NOT NULL,
     replycount int,
     likecount int,
@@ -66,10 +66,10 @@ INSERT INTO contents (content) VALUES ('reply3');
 INSERT INTO contents (content) VALUES ('reply4');
 
 -- posts
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 1, 'title1');
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 2, 'title2');
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 3, 'title3');
-INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 4, 'title4');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 1, 'What does “>_” mean in run command?');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 2, 'Sourcing bash file to set environment variables (Linux)');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 3, 'Help me please with ” Association Rule (Apriori algorithm) ” in Python');
+INSERT INTO posts (userid, create_time, content_id, title) VALUES (1, '2021-04-04T11:19:57.563Z', 4, 'Help regarding Discord Bot cloning (Beginner)');
 
 -- replies
 INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 1, 5);
