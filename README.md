@@ -32,9 +32,13 @@
 
 #### 启动服务 (docker)
 
-首先确认已经安装 docker 并启动，然后在后端文件目录下使用 `docker-compose up`
-(可能需要 root 权限) 启动数据库和后端服务；如果需要重新打包后端的话使用
-`docker-compose build`。再输入下面一行命令导入数据。
+确认已经安装 docker 并启动。
+
+若需要重新打包后端，请使用 `docker-compose build`。
+
+在后端文件目录下使用 `docker-compose up` 启动数据库和后端服务；
+
+下面一行 `shell` 命令可以导入数据:
 
 ```bash
 PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
