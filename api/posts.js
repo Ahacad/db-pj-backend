@@ -38,6 +38,38 @@ const getPosts = async (req, resp) => {
   }
 };
 
+// get a post and its replies (together called a thread) by post id
+const getThreadById = async (req, resp) => {
+  const client = await pool.connect();
+  const postId = parseInt(req.params.id, 10);
+  try {
+    // TODO select post and replise
+    const res = [];
+    const post = (
+      await client.query(
+        'SELECT posts.*, contents.content FROM posts, contents WHERE posts.content_id = contents.id AND posts.id = $1',
+        [postId],
+      )
+    ).rows[0];
+    const replies = (
+      await client.query(
+        'SELECT replies.*, contents.content FROM replies, contents WHERE replies.post_id = $1 AND replies.content_id = contents.id',
+        [postId],
+      )
+    ).rows;
+
+    res.push(post);
+    replies.forEach((reply) => {
+      res.push(reply);
+    });
+    resp.status(200).json(res);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    client.release();
+  }
+};
+
 const deletePost = async (req, resp) => {
   const { userId, postId } = req.body;
 
@@ -110,6 +142,11 @@ const deletePost = async (req, resp) => {
 // client.release();
 // }
 
-const postsClient = { getPosts, addPost, deletePost };
+const postsClient = {
+  getPosts,
+  addPost,
+  deletePost,
+  getThreadById,
+};
 
 module.exports = postsClient;
