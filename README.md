@@ -19,6 +19,8 @@
 - [x] deploy backend to cloud (no need anymore with docker)
 - [ ] deploy frontend to vercel
 
+
+
 ## 项目说明
 
 ### 数据库设计
@@ -29,6 +31,11 @@
 ### 后端
 
 后端采用 express 轻量搭建。
+
+#### 测试
+
+所有单元测试文件都在 `__test__` 里，运行 `yarn test` 即可调用 `Jest`
+测试，注意测试需要启动数据库，见下方 Docker 启动数据库。
 
 #### 启动服务 (docker)
 
