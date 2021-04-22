@@ -40,6 +40,10 @@ const addReply = async (req, resp) => {
       'INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id',
       [userId, postId, createTime, contentId],
     );
+    await client.query(
+      'UPDATE posts SET replycount = replycount + 1 WHERE id = $1',
+      [postId],
+    );
     resp.status(201).json(res.rows);
   } catch (err) {
     console.error(err);
