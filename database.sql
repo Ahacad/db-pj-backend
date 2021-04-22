@@ -19,14 +19,14 @@ CREATE TABLE contents (
 
 CREATE TABLE posts (
     id SERIAL UNIQUE,
-    userid int,
+    userid int NOT NULL,
     title varchar(200),
     create_time timestamp NOT NULL,
-    replycount int,
-    likecount int,
-    reply_userid int,
-    last_reply_time timestamp,
-    content_id int,
+    replycount int DEFAULT 0,
+    likecount int DEFAULT 0,
+    reply_userid int NOT NULL,
+    last_reply_time timestamp NOT NULL,
+    content_id int NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(userid) REFERENCES users(id),
     FOREIGN KEY(content_id) REFERENCES contents(id)
@@ -35,11 +35,11 @@ CREATE TABLE posts (
 
 CREATE TABLE replies (
     id SERIAL UNIQUE,
-    userid int,
-    post_id int,
-    create_time timestamp,
-    likecount int,
-    content_id int,
+    userid int NOT NULL,
+    post_id int NOT NULL,
+    create_time timestamp NOT NULL,
+    likecount int DEFAULT 0,
+    content_id int NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(content_id) REFERENCES contents(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
