@@ -27,7 +27,7 @@ const posts = () => {
     expect(resp.status).toBe(200);
   });
   it('add reply to post', async () => {
-    const resp = await supertest(app).post('/posts/1/reply', {
+    const resp = await supertest(app).post('/posts/1/newreply', {
       content: 'jiriguara',
       userId: 1,
     });

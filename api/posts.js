@@ -41,6 +41,9 @@ const addReply = async (req, resp) => {
       [userId, postId, createTime, contentId],
     );
     resp.status(201).json(res.rows);
+  } catch (err) {
+    console.error(err);
+    resp.status(400).send(err);
   } finally {
     client.release();
   }
@@ -76,7 +79,7 @@ const getThreadById = async (req, resp) => {
     ).rows[0];
     const replies = (
       await client.query(
-        'SELECT replies.*, contents.content FROM replies, contents WHERE replies.post_id = $1 AND replies.content_id = contents.id',
+        'SELECT replies.*, contents.content, users.name FROM replies, contents, users WHERE replies.post_id = $1 AND replies.content_id = contents.id AND replies.userid = users.id;',
         [postId],
       )
     ).rows;
