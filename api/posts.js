@@ -18,6 +18,7 @@ const addPost = async (req, resp) => {
     resp.status(201).send(`${res.rows}`);
   } catch (err) {
     console.error(err);
+    resp.status(400).send();
   } finally {
     client.release();
   }
