@@ -23,35 +23,47 @@
 
 ## 项目说明
 
-### 数据库设计
+### 第一部分: 场景设计
 
+论坛系统，用来搭建论坛
 
-- user_id 简写为 userid
+功能需求：
 
-### 后端
+- 用户注册、登录
+- 查看帖子
+- 查看帖子回复
+- 回复帖子
+- 发布帖子
+- 对帖子作各种微回复（比如赞）
 
+### 第二部分: 技术设计
+#### 2.1 实验环境 
+##### 2.1.1 后端
 后端采用 express 轻量搭建。
-
-#### 测试
-
-所有单元测试文件都在 `__test__` 里，运行 `yarn test` 即可调用 `Jest`
-测试，注意测试需要启动数据库，见下方 Docker 启动数据库。
-
-#### 启动服务 (docker)
-
+###### 启动服务 (docker)
 确认已经安装 docker 并启动。
-
 若需要重新打包后端，请使用 `docker-compose build`。
-
 在后端文件目录下使用 `docker-compose up` 启动数据库和后端服务；
-
 下面一行 `shell` 命令可以导入数据:
-
 ```bash
 PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
 ```
+###### 测试
+所有单元测试文件都在 `__test__` 里，运行 `yarn test` 即可调用 `Jest`
+测试，注意测试需要启动数据库。
+##### 2.1.2 前端
+前端采用 create-react-app 生成，使用 react 全家桶 (react, react-router,
+redux)；ui 框架选择了 material ui 和 tailwindcss；还有一些小的辅助库比如 axios 等等。
+###### 启动服务 (yarn)
+在前端目录下使用 `yarn install && yarn start` 即可启动服务 (需要安装
+`yarn` 或者 `npm`)。
+#### 2.2 设计亮点
+#### 2.3 数据库设计
+- TODO: 
+#### 2.4 其它
 
-#### 后端 API 列表
+
+#### 2.4.1 后端 API 列表
 
 ##### users 
 
@@ -100,7 +112,7 @@ interface Request {
   content: string;
 }
 ```
-###### `POST /posts/:id/reply`
+###### `POST /posts/:id/newreply`
 
 ```typescript
 interface Request {
@@ -125,17 +137,3 @@ interface Response {
   content: string;
 }
 ```
-
-##### posts
-
-
-### 前端
-
-前端采用 create-react-app 生成，使用 react 全家桶 (react, react-router,
-redux)；ui 框架选择了 material ui 和 tailwindcss；还有一些小的辅助库比如 axios 等等。
-
-详细直接见代码，总体比较简单。
-
-#### 启动服务 (yarn)
-
-在前端目录下使用 `yarn start` 即可启动服务。
