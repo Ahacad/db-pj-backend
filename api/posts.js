@@ -24,6 +24,28 @@ const addPost = async (req, resp) => {
   }
 };
 
+const addReply = async (req, resp) => {
+  const postId = parseInt(req.params.id, 10);
+  const { content, userId } = req.body;
+  const createTime = new Date().toISOString();
+  const client = await pool.connect();
+  try {
+    const contentId = (
+      await client.query(
+        'INSERT INTO contents (content) VALUES ($1) RETURNING id;',
+        [content],
+      )
+    ).rows[0].id;
+    const res = await client.query(
+      'INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id',
+      [userId, postId, createTime, contentId],
+    );
+    resp.status(201).json(res.rows);
+  } finally {
+    client.release();
+  }
+};
+
 const getPosts = async (req, resp) => {
   const client = await pool.connect();
   try {
@@ -148,6 +170,7 @@ const postsClient = {
   addPost,
   deletePost,
   getThreadById,
+  addReply,
 };
 
 module.exports = postsClient;

@@ -25,7 +25,12 @@ const posts = () => {
   it('get thread by post id', async () => {
     const resp = await supertest(app).get('/posts/1');
     expect(resp.status).toBe(200);
-    console.log(resp);
+  });
+  it('add reply to post', async () => {
+    const resp = await supertest(app).post('/posts/1/reply', {
+      content: 'jiriguara',
+      userId: 1,
+    });
   });
 };
 
