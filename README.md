@@ -100,7 +100,14 @@ interface Request {
   content: string;
 }
 ```
+###### `POST /posts/:id/reply`
 
+```typescript
+interface Request {
+  userId: string;
+  content: string;
+}
+```
 ###### `GET /posts`
 
 ```typescript
