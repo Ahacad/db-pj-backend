@@ -1,23 +1,23 @@
 
 
 ### TODOS
+- [ ] deploy backend to cloud and connect with frontend (vercel)
+- [ ] different departments for different posts
+- [ ] api for frontend
 
-#### General
+
+#### OLD
 - [x] decide what the project is about: (a forum, perhaps)
 - [x] read about the project requirement specifications (CRUD, usable,
   authority)
-- [ ] learn jest, supertest, make unit tests working
-- [ ] real-world meaning of the project
-- [ ] detailed design of the database 
-
-#### Backend
-- [ ] data pagination
-- [ ] authentication for different **types** of users
-
-#### Deployment
+- [x] learn jest, supertest, make unit tests working
+- [x] real-world meaning of the project
+- [x] detailed design of the database 
+- [x] data pagination
+- [x] authentication for different **types** of users
 - [x] Docker 
 - [x] deploy backend to cloud (no need anymore with docker)
-- [ ] deploy frontend to vercel
+- [x] deploy frontend to vercel
 
 
 
