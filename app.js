@@ -12,7 +12,7 @@ app.use(
   }),
 );
 
-app.use((req, res, next) => {
+app.use((_, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Headers',
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, resp) => {
+app.get('/', (_, resp) => {
   resp.json({ info: 'Node.js, api' });
 });
 
