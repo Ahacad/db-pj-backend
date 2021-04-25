@@ -1,7 +1,9 @@
 const pool = require('../pool');
 
 const addPost = async (req, resp) => {
-  const { userId, title, content } = req.body;
+  const {
+    userId, title, content, departmentId,
+  } = req.body;
   const createTime = new Date().toISOString();
   const client = await pool.connect();
   try {
@@ -12,10 +14,10 @@ const addPost = async (req, resp) => {
       )
     ).rows[0].id;
     const res = await client.query(
-      'INSERT INTO posts (userid, title, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id;',
-      [userId, title, createTime, contentId],
+      'INSERT INTO posts (userid, title, create_time, content_id, department_id) VALUES ($1, $2, $3, $4, $5) RETURNING id;',
+      [userId, title, createTime, contentId, departmentId],
     );
-    resp.status(201).send(`${res.rows}`);
+    resp.status(201).json(`${res.rows}`);
   } catch (err) {
     console.error(err);
     resp.status(400).send();
@@ -26,7 +28,7 @@ const addPost = async (req, resp) => {
 
 const addReply = async (req, resp) => {
   const postId = parseInt(req.params.id, 10);
-  const { content, userId } = req.body;
+  const { userId, content } = req.body;
   const createTime = new Date().toISOString();
   const client = await pool.connect();
   try {
@@ -37,7 +39,7 @@ const addReply = async (req, resp) => {
       )
     ).rows[0].id;
     const res = await client.query(
-      'INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id',
+      'INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id;',
       [userId, postId, createTime, contentId],
     );
     await client.query(
@@ -46,7 +48,7 @@ const addReply = async (req, resp) => {
     );
     resp.status(201).json(res.rows);
   } catch (err) {
-    console.error(err);
+    console.trace(err);
     resp.status(400).send(err);
   } finally {
     client.release();
@@ -161,6 +163,40 @@ const deletePost = async (req, resp) => {
   }
 };
 
+const likePost = async (req, resp) => {
+  const postId = parseInt(req.params.id, 10);
+  const client = await pool.connect();
+  try {
+    await client.query(
+      'UPDATE posts SET likecount = likecount + 1 WHERE id = $1',
+      [postId],
+    );
+    resp.status(200).send();
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+
+const likeReply = async (req, resp) => {
+  const { replyId } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query(
+      'UPDATE replies SET likecount = likecount + 1 WHERE id = $1',
+      [replyId],
+    );
+    resp.status(200).send();
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+
 // TODO: deletePost api
 
 // FIXME: delete this part after finishing api
@@ -178,6 +214,8 @@ const postsClient = {
   deletePost,
   getThreadById,
   addReply,
+  likePost,
+  likeReply,
 };
 
 module.exports = postsClient;
