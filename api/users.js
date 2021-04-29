@@ -43,27 +43,26 @@ const login = (req, resp) => {
     });
 };
 
-const createUser = (req, resp) => {
+const createUser = async (req, resp) => {
   const { name, password, email } = req.body;
   const createTime = new Date().toISOString();
   const saltedPassword = crypto
     .pbkdf2Sync(password, salt, 1000, 64, 'sha512')
     .toString('hex');
   // TODO: there can only be one distinct email in database
-  pool
-    .connect()
-    .then((client) => client
-      .query(
-        'INSERT INTO users (name, email, password, create_time) VALUES ($1, $2, $3, $4) RETURNING id;',
-        [name, email, saltedPassword, createTime],
-      )
-      .then((res) => {
-        client.release();
-        resp.status(201).json(res.rows[0]);
-      }))
-    .catch((err) => {
-      console.error(err);
-    });
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      'INSERT INTO users (name, email, password, create_time, user_type) VALUES ($1, $2, $3, $4, 1) RETURNING id;',
+      [name, email, saltedPassword, createTime],
+    );
+    resp.status(201).json(res.rows);
+  } catch (err) {
+    console.error(err);
+    resp.status(400).send();
+  } finally {
+    client.release();
+  }
 };
 
 const updateUser = (req, resp) => {
