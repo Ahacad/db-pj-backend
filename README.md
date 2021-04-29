@@ -1,10 +1,10 @@
 
-
 ### TODOS
 - [ ] deploy backend to cloud and connect with frontend (vercel)
 - [ ] different departments for different posts
 - [ ] api for frontend
 
+- [ ] fix all eslint warnings
 
 #### OLD
 - [x] decide what the project is about: (a forum, perhaps)
@@ -113,7 +113,6 @@ interface Request {
 }
 ```
 ###### `POST /posts/:id/newreply`
-
 ```typescript
 interface Request {
   userId: string;
@@ -121,11 +120,9 @@ interface Request {
 }
 ```
 ###### `GET /posts`
-
 ```typescript
 interface Request {
 }
-
 interface Response {
   userid: number;
   title: string;
@@ -137,3 +134,6 @@ interface Response {
   content: string;
 }
 ```
+######  `POST /posts/:id/like`
+######  `POST /posts/:id/reply/like`
+

@@ -1,11 +1,11 @@
 CREATE TABLE users (
     id SERIAL UNIQUE,
-    name varchar(40),
-    email varchar(40),
+    name varchar(40) NOT NULL,
+    email varchar(40) NOT NULL,
     password varchar(1000) NOT NULL,
-    bio varchar(60),
+    bio varchar(60) DEFAULT '',
     create_time timestamp NOT NULL,
-    user_type smallint,
+    user_type smallint NOT NULL,
     PRIMARY KEY(id)
 );
 
