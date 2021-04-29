@@ -117,3 +117,8 @@ INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES
 INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 1, 6);
 INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 1, 7);
 INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 1, 8);
+
+-- likes
+INSERT INTO reply_likes (userid, replyid) VALUES (1, 1);
+
+INSERT INTO post_likes (userid, postid) VALUES (1, 1);
