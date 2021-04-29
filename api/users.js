@@ -104,6 +104,48 @@ const deleteUser = (req, resp) => {
     });
 };
 
+const getLikedPosts = async (req, resp) => {
+  const client = await pool.connect();
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const queries = (
+      await client.query('SELECT * FROM post_likes WHERE userid = $1', [userId])
+    ).rows;
+    const res = [];
+    queries.forEach((query) => {
+      res.push(query.postid);
+    });
+    resp.status(200).json(res);
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+
+const getLikedReplies = async (req, resp) => {
+  const client = await pool.connect();
+  const userId = parseInt(req.params.id, 10);
+  try {
+    const queries = (
+      await client.query('SELECT * FROM reply_likes WHERE userid = $1', [
+        userId,
+      ])
+    ).rows;
+    const res = [];
+    queries.forEach((query) => {
+      res.push(query.postid);
+    });
+    resp.status(200).json(res);
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+
 // const getUserByEmail = (req, resp) => {
 // const { email } = req.params;
 // pool
@@ -151,6 +193,8 @@ const usersClient = {
   updateUser,
   deleteUser,
   getUsers,
+  getLikedPosts,
+  getLikedReplies,
 };
 
 module.exports = usersClient;

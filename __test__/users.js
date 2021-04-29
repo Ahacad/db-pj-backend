@@ -26,6 +26,14 @@ const users = () => {
     console.log('login will be tested manually');
     expect(2).toBe(2);
   });
+  it('/users/:id/postlikes   get liked posts by user', async () => {
+    const resp = await supertest(app).get('/users/1/postlikes');
+    expect(resp.status).toBe(200);
+  });
+  it('/users/:id/replylikes   get liked replies by user', async () => {
+    const resp = await supertest(app).get('/users/1/replylikes');
+    expect(resp.status).toBe(200);
+  });
 };
 
 module.exports = users;
