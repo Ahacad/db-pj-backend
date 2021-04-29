@@ -5,6 +5,7 @@ const posts = new Router();
 
 posts.post('/new', postsClient.addPost);
 posts.post('/:id/newreply', postsClient.addReply);
+posts.post('/:id/edit', postsClient.editReply);
 posts.post('/:id/reply/like', postsClient.likeReply);
 posts.post('/:id/like', postsClient.likePost);
 posts.get('/:id', postsClient.getThreadById);
