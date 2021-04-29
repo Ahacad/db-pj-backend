@@ -197,6 +197,26 @@ const likeReply = async (req, resp) => {
   }
 };
 
+const deleteReply = async (req, resp) => {
+  const { replyId } = req.body;
+  const client = await pool.connect();
+  try {
+    const contentId = (
+      await client.query(
+        'DELETE FROM replies WHERE id = $1 RETURNING content_id;',
+        [replyId],
+      )
+    ).rows[0].content_id;
+    await client.query('DELETE FROM contents WHERE id = $1', [contentId]);
+    resp.status(200).json({ replyId, contentId, message: 'DELETED' });
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+
 // TODO: deletePost api
 
 // FIXME: delete this part after finishing api
@@ -216,6 +236,7 @@ const postsClient = {
   addReply,
   likePost,
   likeReply,
+  deleteReply,
 };
 
 module.exports = postsClient;

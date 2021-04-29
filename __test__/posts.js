@@ -2,14 +2,6 @@ const supertest = require('supertest');
 const app = require('../app');
 
 const posts = () => {
-  // delete will be tested manually
-  // it('delete posts', async () => {
-  // const resp = await supertest(app).post('/posts/delete').send({
-  // userId: 1,
-  // postId: 3,
-  // });
-  // expect(resp.status).toBe(200);
-  // });
   it('/posts/new   add post', async () => {
     const resp = await supertest(app).post('/posts/new').send({
       id: 1,
@@ -43,6 +35,21 @@ const posts = () => {
     const resp = await supertest(app).post('/posts/1/reply/like', {
       replyId: 1,
     });
+    expect(resp.status).toBe(200);
+  });
+  // delete will be tested manually
+  // it('delete posts', async () => {
+  // const resp = await supertest(app).post('/posts/delete').send({
+  // userId: 1,
+  // postId: 3,
+  // });
+  // expect(resp.status).toBe(200);
+  // });
+  it('delete replies', async () => {
+    const resp = await supertest(app).post('/posts/1/delete').send({
+      replyId: 9,
+    });
+    console.log(resp.body);
     expect(resp.status).toBe(200);
   });
 };
