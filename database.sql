@@ -57,7 +57,7 @@ CREATE TABLE replies (
 -- mock data
 
 -- users
-INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test1', 'test1@foo.com', '5cd9c504f153b87f33ec38a69f7c36f175ff452b705dc72a5906f7bd0a1d138c777923200341a0ef03c55c86fb8ebe08df26dec9084f3b722e4318f1c8b8f1e2', '2021-04-04T11:19:57.563Z', 1);
+INSERT INTO users (name, email, password, create_time, user_type, bio) VALUES ('test1', 'test1@foo.com', '5cd9c504f153b87f33ec38a69f7c36f175ff452b705dc72a5906f7bd0a1d138c777923200341a0ef03c55c86fb8ebe08df26dec9084f3b722e4318f1c8b8f1e2', '2021-04-04T11:19:57.563Z', 1, 'I am an awesome man!');
 INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test2', 'test2@foo.com', '38b2d4bb61258c4a5646887f65b3f7c3ae2412812a735801edcf003ae41f7a3f943ea5adc105e0bac96f5a1cc490329889fcd6204568211221d490b849e52ec4', '2021-04-04T11:19:57.563Z', 1);
 INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test3', 'test3@foo.com', '35c403d3d680075ade37cf89d61e5ad4a5ba0314d84708d7d473ddcd7aa7b4eabed67ea7b4b6bd7e34636133d7169cee6759a966754b835b912cdbb7145d483d', '2021-04-04T11:19:57.563Z', 1);
 INSERT INTO users (name, email, password, create_time, user_type) VALUES ('test4', 'test4@foo.com', '6fc584b985ef4eb261295a15610207a7a81a072a35371cb0e1728cb62661f0b8a64d251602feca0b8ff63a857ce7e76666beba842287166ac8f07da2a92462fd', '2021-04-04T11:19:57.563Z', 1);
@@ -71,6 +71,10 @@ INSERT INTO contents (content) VALUES ('content1');
 INSERT INTO contents (content) VALUES ('content2');
 INSERT INTO contents (content) VALUES ('content3');
 INSERT INTO contents (content) VALUES ('content4');
+INSERT INTO contents (content) VALUES ('content5');
+INSERT INTO contents (content) VALUES ('content6');
+INSERT INTO contents (content) VALUES ('content7');
+INSERT INTO contents (content) VALUES ('content8');
 
 INSERT INTO contents (content) VALUES ('reply1');
 INSERT INTO contents (content) VALUES ('reply2');
@@ -85,6 +89,10 @@ INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES
 INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 2, 'Sourcing bash file to set environment variables (Linux)');
 INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 3, 'Help me please with ” Association Rule (Apriori algorithm) ” in Python');
 INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 4, 'Help regarding Discord Bot cloning (Beginner)');
+INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 5, '[BUG] Jobs output should return a list for a matrix job');
+INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 6, '/repos/{owner}/{repo}/code-scanning/alerts returns empty list');
+INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 7, '[GitHub Apps] Restrict the installation to Organizations only');
+INSERT INTO posts (department_id, userid, create_time, content_id, title) VALUES (1, 2, '2021-04-04T11:19:57.563Z', 8, '[GitHub Apps] Restrict the installation to Organizations only');
 
 -- replies
 INSERT INTO replies (userid, post_id, create_time, likecount, content_id) VALUES (1, 1, '2021-04-04T11:19:57.563Z', 1, 5);
