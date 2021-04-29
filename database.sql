@@ -53,6 +53,24 @@ CREATE TABLE replies (
     FOREIGN KEY(content_id) REFERENCES contents(id),
     FOREIGN KEY(post_id) REFERENCES posts(id)
 );
+CREATE TABLE post_likes (
+    id SERIAL UNIQUE,
+    userid int NOT NULL,
+    postid int NOT NULL,
+    UNIQUE(userid, postid),
+    PRIMARY KEY(id),
+    FOREIGN KEY (userid) REFERENCES users(id),
+    FOREIGN KEY (postid) REFERENCES posts(id)
+);
+CREATE TABLE reply_likes (
+    id SERIAL UNIQUE,
+    userid int NOT NULL,
+    replyid int NOT NULL,
+    UNIQUE(userid, replyid),
+    PRIMARY KEY(id),
+    FOREIGN KEY (userid) REFERENCES users(id),
+    FOREIGN KEY (replyid) REFERENCES replies(id)
+);
 
 -- mock data
 
