@@ -161,6 +161,38 @@ const edit = async (req, resp) => {
     client.release();
   }
 };
+const getPosts = async (req, resp) => {
+  const userId = parseInt(req.params.id, 10);
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      'SELECT posts.* FROM posts, users WHERE posts.userid = users.id AND users.id = $1',
+      [userId],
+    );
+    resp.status(200).json(res.rows);
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+const getReplies = async (req, resp) => {
+  const userId = parseInt(req.params.id, 10);
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      'SELECT replies.* FROM replies, users WHERE replies.userid = users.id AND users.id = $1',
+      [userId],
+    );
+    resp.status(200).json(res.rows);
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
 
 // const getUserByEmail = (req, resp) => {
 // const { email } = req.params;
@@ -212,6 +244,8 @@ const usersClient = {
   getUsers,
   getLikedPosts,
   getLikedReplies,
+  getPosts,
+  getReplies,
 };
 
 module.exports = usersClient;
