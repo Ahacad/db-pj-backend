@@ -5,6 +5,7 @@ const users = new Router();
 
 users.post('/register', usersClient.createUser);
 users.post('/login', usersClient.login);
+users.post('/edit', usersClient.edit);
 users.post('/update/:id', usersClient.updateUser);
 users.delete('/delete/:id', usersClient.deleteUser);
 users.get('/:id/postlikes', usersClient.getLikedPosts);

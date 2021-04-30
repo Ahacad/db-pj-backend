@@ -145,6 +145,22 @@ const getLikedReplies = async (req, resp) => {
     client.release();
   }
 };
+const edit = async (req, resp) => {
+  const { userId, bio } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query('UPDATE users SET bio = $1 WHERE id = $2;', [
+      bio,
+      userId,
+    ]);
+    resp.status(200).send();
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
 
 // const getUserByEmail = (req, resp) => {
 // const { email } = req.params;
@@ -190,6 +206,7 @@ const getLikedReplies = async (req, resp) => {
 const usersClient = {
   createUser,
   login,
+  edit,
   updateUser,
   deleteUser,
   getUsers,
