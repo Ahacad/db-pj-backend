@@ -46,10 +46,9 @@ const posts = () => {
    *});
    */
   // TODO: edit post api
-  // TODO: like post
   it('/posts/:id/like   like post', async () => {
     const resp = await supertest(app).post('/posts/1/like').send({
-      userId: 1,
+      userId: 2,
     });
     expect(resp.status).toBe(200);
   });
@@ -60,6 +59,13 @@ const posts = () => {
     });
     expect(resp.status).toBe(200);
   });
+  it('/posts/:id/unlike   unlike post', async () => {
+    const resp = await supertest(app).post('/posts/1/unlike').send({
+      userId: 1,
+    });
+    expect(resp.status).toBe(200);
+  });
+  // TODO: unlike posts and replies
 };
 
 module.exports = posts;

@@ -230,6 +230,51 @@ const likeReply = async (req, resp) => {
     client.release();
   }
 };
+const unlikeReply = async (req, resp) => {
+  const { replyId, userId } = req.body;
+  const client = await pool.connect();
+  try {
+    await Promise.all([
+      client.query(
+        'UPDATE replies SET likecount = likecount - 1 WHERE id = $1;',
+        [replyId],
+      ),
+      client.query(
+        'DELETE FROM reply_likes WHERE userid = $1 AND replyid = $2;',
+        [userId, replyId],
+      ),
+    ]);
+    resp.status(200).send();
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
+const unlikePost = async (req, resp) => {
+  const postId = parseInt(req.params.id, 10);
+  const { userId } = req.body;
+  const client = await pool.connect();
+  try {
+    await Promise.all([
+      client.query(
+        'UPDATE posts SET likecount = likecount - 1 WHERE id = $1;',
+        [postId],
+      ),
+      client.query(
+        'DELETE FROM post_likes WHERE userid = $1 AND postid = $2;',
+        [userId, postId],
+      ),
+    ]);
+    resp.status(200).send();
+  } catch (err) {
+    console.trace(err);
+    resp.status(400).send(err);
+  } finally {
+    client.release();
+  }
+};
 
 const deleteReply = async (req, resp) => {
   const postId = parseInt(req.params.id, 10);
@@ -278,6 +323,8 @@ const postsClient = {
   editReply,
   likePost,
   likeReply,
+  unlikePost,
+  unlikeReply,
   deleteReply,
 };
 

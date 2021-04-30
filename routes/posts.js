@@ -8,6 +8,8 @@ posts.post('/:id/newreply', postsClient.addReply);
 posts.post('/:id/edit', postsClient.editReply);
 posts.post('/:id/reply/like', postsClient.likeReply);
 posts.post('/:id/like', postsClient.likePost);
+posts.post('/:id/reply/unlike', postsClient.unlikeReply);
+posts.post('/:id/unlike', postsClient.unlikePost);
 posts.get('/:id', postsClient.getThreadById);
 posts.post('/:id/delete', postsClient.deleteReply);
 posts.post('/delete', postsClient.deletePost);
