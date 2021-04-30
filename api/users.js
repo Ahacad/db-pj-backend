@@ -135,7 +135,7 @@ const getLikedReplies = async (req, resp) => {
     ).rows;
     const res = [];
     queries.forEach((query) => {
-      res.push(query.postid);
+      res.push(query.replyid);
     });
     resp.status(200).json(res);
   } catch (err) {
