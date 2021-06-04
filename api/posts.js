@@ -1,21 +1,19 @@
-const pool = require('../pool');
+const { pool } = require("../pool");
 
 const addPost = async (req, resp) => {
-  const {
-    userId, title, content, departmentId,
-  } = req.body;
+  const { userId, title, content, departmentId } = req.body;
   const createTime = new Date().toISOString();
   const client = await pool.connect();
   try {
     const contentId = (
       await client.query(
-        'INSERT INTO contents (content) VALUES ($1) RETURNING id;',
-        [content],
+        "INSERT INTO contents (content) VALUES ($1) RETURNING id;",
+        [content]
       )
     ).rows[0].id;
     const res = await client.query(
-      'INSERT INTO posts (userid, title, create_time, content_id, department_id) VALUES ($1, $2, $3, $4, $5) RETURNING id;',
-      [userId, title, createTime, contentId, departmentId],
+      "INSERT INTO posts (userid, title, create_time, content_id, department_id) VALUES ($1, $2, $3, $4, $5) RETURNING id;",
+      [userId, title, createTime, contentId, departmentId]
     );
     resp.status(201).json(`${res.rows}`);
   } catch (err) {
@@ -34,17 +32,17 @@ const addReply = async (req, resp) => {
   try {
     const contentId = (
       await client.query(
-        'INSERT INTO contents (content) VALUES ($1) RETURNING id;',
-        [content],
+        "INSERT INTO contents (content) VALUES ($1) RETURNING id;",
+        [content]
       )
     ).rows[0].id;
     const res = await client.query(
-      'INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id;',
-      [userId, postId, createTime, contentId],
+      "INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id;",
+      [userId, postId, createTime, contentId]
     );
     await client.query(
-      'UPDATE posts SET replycount = replycount + 1 WHERE id = $1',
-      [postId],
+      "UPDATE posts SET replycount = replycount + 1 WHERE id = $1",
+      [postId]
     );
     resp.status(201).json(res.rows);
   } catch (err) {
@@ -60,11 +58,11 @@ const editReply = async (req, resp) => {
   const client = await pool.connect;
   try {
     const contentId = (
-      await client.query('SELECT content_id FROM replies WHERE id = $1;', [
+      await client.query("SELECT content_id FROM replies WHERE id = $1;", [
         replyId,
       ])
     ).rows[0].content_id;
-    await client.query('UPDATE replies SET content = $1 WHERE id = $2;', [
+    await client.query("UPDATE replies SET content = $1 WHERE id = $2;", [
       content,
       contentId,
     ]);
@@ -81,7 +79,7 @@ const getPosts = async (req, resp) => {
   const client = await pool.connect();
   try {
     const res = await client.query(
-      'SELECT posts.*, contents.content, users.name FROM posts, contents, users WHERE posts.content_id = contents.id AND posts.userid = users.id;',
+      "SELECT posts.*, contents.content, users.name FROM posts, contents, users WHERE posts.content_id = contents.id AND posts.userid = users.id;"
     );
 
     resp.status(200).json(res.rows);
@@ -101,14 +99,14 @@ const getThreadById = async (req, resp) => {
     const res = [];
     const post = (
       await client.query(
-        'SELECT posts.*, contents.content FROM posts, contents WHERE posts.content_id = contents.id AND posts.id = $1',
-        [postId],
+        "SELECT posts.*, contents.content FROM posts, contents WHERE posts.content_id = contents.id AND posts.id = $1",
+        [postId]
       )
     ).rows[0];
     const replies = (
       await client.query(
-        'SELECT replies.*, contents.content, users.name FROM replies, contents, users WHERE replies.post_id = $1 AND replies.content_id = contents.id AND replies.userid = users.id;',
-        [postId],
+        "SELECT replies.*, contents.content, users.name FROM replies, contents, users WHERE replies.post_id = $1 AND replies.content_id = contents.id AND replies.userid = users.id;",
+        [postId]
       )
     ).rows;
 
@@ -130,49 +128,49 @@ const deletePost = async (req, resp) => {
   const client = await pool.connect();
   try {
     const userType = await client.query(
-      'SELECT user_type FROM users WHERE id = $1;',
-      [userId],
+      "SELECT user_type FROM users WHERE id = $1;",
+      [userId]
     );
     if (userType === 0) {
       // admin
       const repliesContentId = await client.query(
-        'DELETE FROM replies WHERE post_id = $1 RETURNING content_id;',
-        [postId],
+        "DELETE FROM replies WHERE post_id = $1 RETURNING content_id;",
+        [postId]
       );
       repliesContentId.rows.forEach(async (replyContentId) => {
-        await client.query('DELETE FROM contents WHERE id = $1;', [
+        await client.query("DELETE FROM contents WHERE id = $1;", [
           replyContentId.content_id,
         ]);
       });
       const postContentId = (
         await client.query(
-          'DELETE FROM posts WHERE id = $1 RETURNING content_id;',
-          [postId],
+          "DELETE FROM posts WHERE id = $1 RETURNING content_id;",
+          [postId]
         )
       ).rows[0].content_id;
-      client.query('DELETE FROM contents WHERE id = $1;', [postContentId]);
+      client.query("DELETE FROM contents WHERE id = $1;", [postContentId]);
       resp.status(200).send();
     } else {
       const postUserId = (
-        await client.query('SELECT userid FROM posts WHERE id = $1;', [postId])
+        await client.query("SELECT userid FROM posts WHERE id = $1;", [postId])
       ).rows[0].userid;
       if (postUserId === userId) {
         const repliesContentId = await client.query(
-          'DELETE FROM replies WHERE post_id = $1 RETURNING content_id;',
-          [postId],
+          "DELETE FROM replies WHERE post_id = $1 RETURNING content_id;",
+          [postId]
         );
         repliesContentId.rows.forEach(async (replyContentId) => {
-          await client.query('DELETE FROM contents WHERE id = $1;', [
+          await client.query("DELETE FROM contents WHERE id = $1;", [
             replyContentId.content_id,
           ]);
         });
         const postContentId = (
           await client.query(
-            'DELETE FROM posts WHERE id = $1 RETURNING content_id;',
-            [postId],
+            "DELETE FROM posts WHERE id = $1 RETURNING content_id;",
+            [postId]
           )
         ).rows[0].content_id;
-        client.query('DELETE FROM contents WHERE id = $1;', [postContentId]);
+        client.query("DELETE FROM contents WHERE id = $1;", [postContentId]);
         resp.status(200).send();
       } else {
         resp.status(401).json(postUserId);
@@ -191,10 +189,10 @@ const likePost = async (req, resp) => {
   const client = await pool.connect();
   try {
     await Promise.all([
-      client.query('UPDATE posts SET likecount = likecount + 1 WHERE id = $1', [
+      client.query("UPDATE posts SET likecount = likecount + 1 WHERE id = $1", [
         postId,
       ]),
-      client.query('INSERT INTO post_likes (userid, postid) VALUES ($1, $2)', [
+      client.query("INSERT INTO post_likes (userid, postid) VALUES ($1, $2)", [
         userId,
         postId,
       ]),
@@ -214,12 +212,12 @@ const likeReply = async (req, resp) => {
   try {
     await Promise.all([
       client.query(
-        'UPDATE replies SET likecount = likecount + 1 WHERE id = $1',
-        [replyId],
+        "UPDATE replies SET likecount = likecount + 1 WHERE id = $1",
+        [replyId]
       ),
       client.query(
-        'INSERT INTO reply_likes (userid, replyid) VALUES ($1, $2);',
-        [userId, replyId],
+        "INSERT INTO reply_likes (userid, replyid) VALUES ($1, $2);",
+        [userId, replyId]
       ),
     ]);
     resp.status(200).send();
@@ -236,12 +234,12 @@ const unlikeReply = async (req, resp) => {
   try {
     await Promise.all([
       client.query(
-        'UPDATE replies SET likecount = likecount - 1 WHERE id = $1;',
-        [replyId],
+        "UPDATE replies SET likecount = likecount - 1 WHERE id = $1;",
+        [replyId]
       ),
       client.query(
-        'DELETE FROM reply_likes WHERE userid = $1 AND replyid = $2;',
-        [userId, replyId],
+        "DELETE FROM reply_likes WHERE userid = $1 AND replyid = $2;",
+        [userId, replyId]
       ),
     ]);
     resp.status(200).send();
@@ -259,12 +257,12 @@ const unlikePost = async (req, resp) => {
   try {
     await Promise.all([
       client.query(
-        'UPDATE posts SET likecount = likecount - 1 WHERE id = $1;',
-        [postId],
+        "UPDATE posts SET likecount = likecount - 1 WHERE id = $1;",
+        [postId]
       ),
       client.query(
-        'DELETE FROM post_likes WHERE userid = $1 AND postid = $2;',
-        [userId, postId],
+        "DELETE FROM post_likes WHERE userid = $1 AND postid = $2;",
+        [userId, postId]
       ),
     ]);
     resp.status(200).send();
@@ -283,18 +281,18 @@ const deleteReply = async (req, resp) => {
   try {
     const contentId = (
       await client.query(
-        'DELETE FROM replies WHERE id = $1 RETURNING content_id;',
-        [replyId],
+        "DELETE FROM replies WHERE id = $1 RETURNING content_id;",
+        [replyId]
       )
     ).rows[0].content_id;
     await Promise.all([
-      client.query('DELETE FROM contents WHERE id = $1', [contentId]),
+      client.query("DELETE FROM contents WHERE id = $1", [contentId]),
       client.query(
-        'UPDATE posts SET replycount = replycount - 1 WHERE id = $1',
-        [postId],
+        "UPDATE posts SET replycount = replycount - 1 WHERE id = $1",
+        [postId]
       ),
     ]);
-    resp.status(200).json({ replyId, contentId, message: 'DELETED' });
+    resp.status(200).json({ replyId, contentId, message: "DELETED" });
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);

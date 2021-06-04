@@ -1,15 +1,17 @@
 /*
  *postgresql pooling
  */
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const pool = new Pool({
-  user: 'ahacad',
-  password: 'root',
+  user: "ahacad",
+  password: "root",
   host: process.env.DB_HOST,
-  database: 'api',
+  database: "api",
   port: 5432,
 });
-module.exports = pool;
+module.exports = {
+  pool,
+};
