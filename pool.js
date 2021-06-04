@@ -5,13 +5,22 @@ const { Pool } = require("pg");
 
 require("dotenv").config();
 
-const pool = new Pool({
+const poolwrite = new Pool({
   user: "ahacad",
   password: "root",
   host: process.env.DB_HOST,
   database: "api",
   port: 5432,
 });
+const poolread = new Pool({
+  user: "ahacad",
+  password: "root",
+  host: process.env.DB_HOST,
+  database: "api",
+  port: 5432,
+});
+
 module.exports = {
-  pool,
+  poolwrite,
+  poolread,
 };

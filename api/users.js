@@ -1,12 +1,12 @@
 const crypto = require("crypto");
-const { pool } = require("../pool");
+const { poolwrite, poolread } = require("../pool");
 
 // const salt = crypto.randomBytes(16).toString('hex');
 // TODO: change salt to rnadom string or secret in runtime
 const salt = "helloworld";
 
 const getUsers = (_, resp) => {
-  pool
+  poolread
     .connect()
     .then((client) =>
       client.query("SELECT * FROM users ORDER BY id ASC").then((res) => {
@@ -24,7 +24,7 @@ const login = (req, resp) => {
   const saltedPassword = crypto
     .pbkdf2Sync(password, salt, 1000, 64, "sha512")
     .toString("hex");
-  pool
+  poolread
     .connect()
     .then((client) =>
       client
@@ -54,7 +54,7 @@ const createUser = async (req, resp) => {
     .pbkdf2Sync(password, salt, 1000, 64, "sha512")
     .toString("hex");
   // TODO: there can only be one distinct email in database
-  const client = await pool.connect();
+  const client = await poolwrite.connect();
   try {
     const res = await client.query(
       "INSERT INTO users (name, email, password, create_time, user_type) VALUES ($1, $2, $3, $4, 1) RETURNING id;",
@@ -76,7 +76,7 @@ const updateUser = (req, resp) => {
     resp.status(400).send("cannot have empty name or bio");
     return;
   }
-  pool
+  poolwrite
     .connect()
     .then((client) =>
       client
@@ -97,7 +97,7 @@ const updateUser = (req, resp) => {
 const deleteUser = (req, resp) => {
   const id = parseInt(req.params.id, 10);
 
-  pool
+  poolwrite
     .connect()
     .then((client) =>
       client
@@ -113,7 +113,7 @@ const deleteUser = (req, resp) => {
 };
 
 const getLikedPosts = async (req, resp) => {
-  const client = await pool.connect();
+  const client = await poolread.connect();
   const userId = parseInt(req.params.id, 10);
   try {
     const queries = (
@@ -133,7 +133,7 @@ const getLikedPosts = async (req, resp) => {
 };
 
 const getLikedReplies = async (req, resp) => {
-  const client = await pool.connect();
+  const client = await poolread.connect();
   const userId = parseInt(req.params.id, 10);
   try {
     const queries = (
@@ -155,7 +155,7 @@ const getLikedReplies = async (req, resp) => {
 };
 const edit = async (req, resp) => {
   const { userId, bio } = req.body;
-  const client = await pool.connect();
+  const client = await poolwrite.connect();
   try {
     await client.query("UPDATE users SET bio = $1 WHERE id = $2;", [
       bio,
@@ -171,7 +171,7 @@ const edit = async (req, resp) => {
 };
 const getPosts = async (req, resp) => {
   const userId = parseInt(req.params.id, 10);
-  const client = await pool.connect();
+  const client = await poolread.connect();
   try {
     const res = await client.query(
       "SELECT posts.* FROM posts, users WHERE posts.userid = users.id AND users.id = $1",
@@ -187,7 +187,7 @@ const getPosts = async (req, resp) => {
 };
 const getReplies = async (req, resp) => {
   const userId = parseInt(req.params.id, 10);
-  const client = await pool.connect();
+  const client = await poolread.connect();
   try {
     const res = await client.query(
       "SELECT replies.* FROM replies, users WHERE replies.userid = users.id AND users.id = $1",
