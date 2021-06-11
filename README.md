@@ -59,7 +59,7 @@ PGPASSWORD=root psql -d api -U ahacad -f database.sql -h localhost
 测试，注意测试需要启动数据库。
 ##### 2.1.2 前端
 前端采用 create-react-app 生成，使用 react 全家桶 (react, react-router,
-redux)；ui 框架选择了 material ui 和 tailwindcss；还有一些小的辅助库比如 axios 等等。
+redux)；ui 框架选择了 material ui 和 tailwindcss；还有一些小的辅助库比如 axios, knex 等等。
 ###### 启动服务 (yarn)
 在前端目录下使用 `yarn install && yarn start` 即可启动服务 (需要安装
 `yarn` 或者 `npm`)。
