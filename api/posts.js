@@ -3,19 +3,20 @@ const { poolwrite, poolread } = require("../pool");
 const addPost = async (req, resp) => {
   const { userId, title, content, departmentId } = req.body;
   const createTime = new Date().toISOString();
-  const clientwrite = await poolwrite.connect();
   try {
-    const contentId = (
-      await clientwrite.query(
-        "INSERT INTO contents (content) VALUES ($1) RETURNING id;",
-        [content]
-      )
-    ).rows[0].id;
-    const res = await clientwrite.query(
-      "INSERT INTO posts (userid, title, create_time, content_id, department_id) VALUES ($1, $2, $3, $4, $5) RETURNING id;",
-      [userId, title, createTime, contentId, departmentId]
-    );
-    resp.status(201).json(`${res.rows}`);
+    const [contentId] = await poolwrite("contents").insert({
+      content,
+    });
+
+    const res = await poolwrite("posts").insert({
+      userid: userId,
+      title,
+      create_time: createTime,
+      content_id: contentId,
+      department_id: departmentId,
+    });
+
+    resp.status(201).json(res);
   } catch (err) {
     console.error(err);
     resp.status(400).send();
@@ -28,23 +29,24 @@ const addReply = async (req, resp) => {
   const postId = parseInt(req.params.id, 10);
   const { userId, content } = req.body;
   const createTime = new Date().toISOString();
-  const clientwrite = await poolwrite.connect();
   try {
-    const contentId = (
-      await clientwrite.query(
-        "INSERT INTO contents (content) VALUES ($1) RETURNING id;",
-        [content]
-      )
-    ).rows[0].id;
-    const res = await clientwrite.query(
-      "INSERT INTO replies (userid, post_id, create_time, content_id) VALUES ($1, $2, $3, $4) RETURNING id;",
-      [userId, postId, createTime, contentId]
-    );
-    await clientwrite.query(
-      "UPDATE posts SET replycount = replycount + 1 WHERE id = $1",
-      [postId]
-    );
-    resp.status(201).json(res.rows);
+    const [contentId] = await poolwrite("contents").insert({
+      content,
+    });
+    const res = await poolwrite("replies").insert({
+      userid: userId,
+      post_id: postId,
+      create_time: createTime,
+      content_id: contentId,
+    });
+    const [tmp] = await poolread("posts")
+      .where("id", postId)
+      .select("replycount");
+    await poolwrite.where("id", postId).update({
+      replycount: tmp.replycount + 1,
+    });
+
+    resp.status(201).json(res);
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
@@ -55,18 +57,13 @@ const addReply = async (req, resp) => {
 
 const editReply = async (req, resp) => {
   const { replyId, content } = req.body;
-  const clientwrite = await poolwrite.connect();
-  const clientread = await poolread.connect();
   try {
     const contentId = (
-      await clientread.query("SELECT content_id FROM replies WHERE id = $1;", [
-        replyId,
-      ])
-    ).rows[0].content_id;
-    await clientwrite.query("UPDATE replies SET content = $1 WHERE id = $2;", [
+      await poolread("relies").where("id", replyId).select("content_id")
+    )[0].content_id;
+    await poolwrite("replies").where("id", contentId).update({
       content,
-      contentId,
-    ]);
+    });
     resp.status(200).send();
   } catch (err) {
     console.error(err);
