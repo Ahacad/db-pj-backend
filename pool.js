@@ -1,7 +1,7 @@
 /*
  *postgresql pooling
  */
-const mysql = require("mysql");
+const knex = require("knex");
 
 require("dotenv").config();
 
@@ -20,19 +20,39 @@ require("dotenv").config();
 // port: 5432,
 //});
 
-const poolwrite = mysql.createPool({
-  connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: "ahacad",
-  password: "root",
-  database: "api",
+// const poolwrite = mysql.createPool({
+// connectionLimit: 10,
+// host: process.env.DB_HOST,
+// user: "ahacad",
+// password: "root",
+// database: "api",
+//});
+// const poolread = mysql.createPool({
+// connectionLimit: 10,
+// host: process.env.DB_HOST,
+// user: "ahacad",
+// password: "root",
+// database: "api",
+//});
+
+// FIXME: change database configs
+const poolread = require("knex")({
+  client: "mysql",
+  connection: {
+    host: "127.0.0.1",
+    user: "ahacad",
+    password: "mysql",
+    database: "foo",
+  },
 });
-const poolread = mysql.createPool({
-  connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: "ahacad",
-  password: "root",
-  database: "api",
+const poolwrite = require("knex")({
+  client: "mysql",
+  connection: {
+    host: "127.0.0.1",
+    user: "ahacad",
+    password: "mysql",
+    database: "foo",
+  },
 });
 
 module.exports = {
