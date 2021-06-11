@@ -1,5 +1,10 @@
 
 ### TODOS
+
+- [ ] rewrite all queries using knex
+- [ ] deploy to huawei cloud
+
+------
 - [ ] deploy backend to cloud and connect with frontend (vercel)
 - [ ] different departments for different posts
 - [ ] api for frontend
