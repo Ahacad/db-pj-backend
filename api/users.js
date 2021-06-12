@@ -1,205 +1,165 @@
-const crypto = require("crypto");
-const { poolwrite, poolread } = require("../pool");
+const crypto = require('crypto');
+const {poolwrite, poolread} = require('../pool');
 
 // const salt = crypto.randomBytes(16).toString('hex');
 // TODO: change salt to rnadom string or secret in runtime
-const salt = "helloworld";
+const salt = 'helloworld';
 
 const getUsers = (_, resp) => {
-  poolread
-    .connect()
-    .then((client) =>
-      client.query("SELECT * FROM users ORDER BY id ASC").then((res) => {
-        client.release();
-        resp.status(200).json(res.rows);
-      })
-    )
-    .catch((err) => {
-      console.error(err);
-    });
+    try {
+        const res = await poolread('users').orderby('id').select('*');
+        resp.status(200).json(res);
+    } catch (err) {
+        console.error(err);
+    }
 };
 
 const login = (req, resp) => {
-  const { email, password } = req.body;
-  const saltedPassword = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-    .toString("hex");
-  poolread
-    .connect()
-    .then((client) =>
-      client
-        .query("SELECT * FROM users WHERE email = $1", [email])
-        .then((res) => {
-          client.release();
-          if (res.rows[0] === undefined) {
-            resp.status(404).send("user not found");
-            // TODO: test manually
-          } else if (res.rows[0].password !== saltedPassword) {
-            console.log(res.rows[0]);
-            resp.status(403).send("password wrong");
-          } else {
-            resp.status(200).send(res.rows[0]);
-          }
-        })
-    )
-    .catch((err) => {
-      console.error(err);
-    });
+    const {email, password} = req.body;
+    const saltedPassword =
+        crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    try {
+        const res = await poolread(users).where('email', email).select('*');
+        if (res[0] === undefined) {
+            resp.status(404).send('user not found');
+        } else if (res[0].password !== saltedPassword) {
+            console.log(res[0]);
+            resp.status(403).send('password wrong');
+        } else {
+            resp.status(200).send(res[0]);
+        }
+
+    } catch (err) {
+        console.error(err)
+    }
 };
 
 const createUser = async (req, resp) => {
-  const { name, password, email } = req.body;
-  const createTime = new Date().toISOString();
-  const saltedPassword = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, "sha512")
-    .toString("hex");
-  // TODO: there can only be one distinct email in database
-  const client = await poolwrite.connect();
-  try {
-    const res = await client.query(
-      "INSERT INTO users (name, email, password, create_time, user_type) VALUES ($1, $2, $3, $4, 1) RETURNING id;",
-      [name, email, saltedPassword, createTime]
-    );
-    resp.status(201).json(res.rows);
-  } catch (err) {
-    console.error(err);
-    resp.status(400).send();
-  } finally {
-    client.release();
-  }
+    const {name, password, email} = req.body;
+    const createTime = new Date().toISOString();
+    const saltedPassword =
+        crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    // TODO: there can only be one distinct email in database
+    try {
+        const res = poolwrite('users').insert({
+            name,
+            email,
+            password: saltedPassword,
+            create_time: createTime,
+            user_type: 1,
+        })
+        resp.status(201).json('inserted');
+    } catch (err) {
+        console.error(err);
+        resp.status(400).send();
+    }
 };
 
 const updateUser = (req, resp) => {
-  const id = parseInt(req.params.id, 10);
-  const { name, bio } = req.body;
-  if (name === undefined || bio === undefined) {
-    resp.status(400).send("cannot have empty name or bio");
-    return;
-  }
-  poolwrite
-    .connect()
-    .then((client) =>
-      client
-        .query(
-          "UPDATE users SET name = $1, bio = $2 WHERE id = $3 RETURNING id;",
-          [name, bio, id]
-        )
-        .then((res) => {
-          client.release();
-          resp.status(200).send(`${res.rows}`);
+    const id = parseInt(req.params.id, 10);
+    const {name, bio} = req.body;
+    if (name === undefined || bio === undefined) {
+        resp.status(400).send('cannot have empty name or bio');
+        return;
+    }
+    try {
+        poolwrite('users').where('id', id).update({
+            name,
+            bio,
         })
-    )
-    .catch((err) => {
-      console.error(err);
-    });
+        resp.status(200).send(`${res.rows}`);
+    } catch (err) {
+        console.error(err)
+    }
 };
 
 const deleteUser = (req, resp) => {
-  const id = parseInt(req.params.id, 10);
+    const id = parseInt(req.params.id, 10);
 
-  poolwrite
-    .connect()
-    .then((client) =>
-      client
-        .query("DELETE FROM users WHERE id = $1 RETURNING id;", [id])
-        .then((res) => {
-          client.release();
-          resp.status(200).send(`${res.rows}`);
-        })
-    )
-    .catch((err) => {
-      console.error(err);
-    });
+    try {
+        poolwrite('users').where('id', id).del();
+        resp.status(200).send(`deleted`);
+    } catch (err) {
+        console.error(err);
+    };
 };
 
 const getLikedPosts = async (req, resp) => {
-  const client = await poolread.connect();
-  const userId = parseInt(req.params.id, 10);
-  try {
-    const queries = (
-      await client.query("SELECT * FROM post_likes WHERE userid = $1", [userId])
-    ).rows;
-    const res = [];
-    queries.forEach((query) => {
-      res.push(query.postid);
-    });
-    resp.status(200).json(res);
-  } catch (err) {
-    console.trace(err);
-    resp.status(400).send(err);
-  } finally {
-    client.release();
-  }
+    const userId = parseInt(req.params.id, 10);
+    try {
+        const queries =
+            await poolread('post_likes').where('userid', userId).select('*');
+
+        const res = [];
+        queries.forEach((query) => {
+            res.push(query.postid);
+        });
+        resp.status(200).json(res);
+    } catch (err) {
+        console.trace(err);
+        resp.status(400).send(err);
+    } finally {
+        client.release();
+    }
 };
 
 const getLikedReplies = async (req, resp) => {
-  const client = await poolread.connect();
-  const userId = parseInt(req.params.id, 10);
-  try {
-    const queries = (
-      await client.query("SELECT * FROM reply_likes WHERE userid = $1", [
-        userId,
-      ])
-    ).rows;
-    const res = [];
-    queries.forEach((query) => {
-      res.push(query.replyid);
-    });
-    resp.status(200).json(res);
-  } catch (err) {
-    console.trace(err);
-    resp.status(400).send(err);
-  } finally {
-    client.release();
-  }
+    const client = await poolread.connect();
+    const userId = parseInt(req.params.id, 10);
+    try {
+        const queries =
+            await poolread('reply_likes').where('userid', userId).select('*');
+        const res = [];
+        queries.forEach((query) => {
+            res.push(query.replyid);
+        });
+        resp.status(200).json(res);
+    } catch (err) {
+        console.trace(err);
+        resp.status(400).send(err);
+    } finally {
+        client.release();
+    }
 };
 const edit = async (req, resp) => {
-  const { userId, bio } = req.body;
-  const client = await poolwrite.connect();
-  try {
-    await client.query("UPDATE users SET bio = $1 WHERE id = $2;", [
-      bio,
-      userId,
-    ]);
-    resp.status(200).send();
-  } catch (err) {
-    console.trace(err);
-    resp.status(400).send(err);
-  } finally {
-    client.release();
-  }
+    const {userId, bio} = req.body;
+    try {
+        await poolwrite('users').where('id', userId).update({bio})
+        resp.status(200).send();
+    } catch (err) {
+        console.trace(err);
+        resp.status(400).send(err);
+    }
 };
 const getPosts = async (req, resp) => {
-  const userId = parseInt(req.params.id, 10);
-  const client = await poolread.connect();
-  try {
-    const res = await client.query(
-      "SELECT posts.* FROM posts, users WHERE posts.userid = users.id AND users.id = $1",
-      [userId]
-    );
-    resp.status(200).json(res.rows);
-  } catch (err) {
-    console.trace(err);
-    resp.status(400).send(err);
-  } finally {
-    client.release();
-  }
+    const userId = parseInt(req.params.id, 10);
+    try {
+        const res = await poolread('posts')
+                        .join('users', 'posts.userid', 'users.id')
+                        .where('users.id', userId)
+                        .select('posts.*')
+
+        resp.status(200).json(res);
+    } catch (err) {
+        console.trace(err);
+        resp.status(400).send(err);
+    }
 };
 const getReplies = async (req, resp) => {
-  const userId = parseInt(req.params.id, 10);
-  const client = await poolread.connect();
-  try {
-    const res = await client.query(
-      "SELECT replies.* FROM replies, users WHERE replies.userid = users.id AND users.id = $1",
-      [userId]
-    );
-    resp.status(200).json(res.rows);
-  } catch (err) {
-    console.trace(err);
-    resp.status(400).send(err);
-  } finally {
-    client.release();
-  }
+    const userId = parseInt(req.params.id, 10);
+    try {
+        const res = await poolread('replies')
+                        .join('users', 'replies.userid', 'users.id')
+                        .where('users.id', userId)
+                        .select('replies.*');
+
+        resp.status(200).json(res);
+    } catch (err) {
+        console.trace(err);
+        resp.status(400).send(err);
+    } finally {
+        client.release();
+    }
 };
 
 // const getUserByEmail = (req, resp) => {
@@ -242,16 +202,16 @@ const getReplies = async (req, resp) => {
 // };
 
 const usersClient = {
-  createUser,
-  login,
-  edit,
-  updateUser,
-  deleteUser,
-  getUsers,
-  getLikedPosts,
-  getLikedReplies,
-  getPosts,
-  getReplies,
+    createUser,
+    login,
+    edit,
+    updateUser,
+    deleteUser,
+    getUsers,
+    getLikedPosts,
+    getLikedReplies,
+    getPosts,
+    getReplies,
 };
 
 module.exports = usersClient;
