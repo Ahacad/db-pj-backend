@@ -98,13 +98,10 @@ const getLikedPosts = async (req, resp) => {
     } catch (err) {
         console.trace(err);
         resp.status(400).send(err);
-    } finally {
-        client.release();
     }
 };
 
 const getLikedReplies = async (req, resp) => {
-    const client = await poolread.connect();
     const userId = parseInt(req.params.id, 10);
     try {
         const queries =
@@ -117,8 +114,6 @@ const getLikedReplies = async (req, resp) => {
     } catch (err) {
         console.trace(err);
         resp.status(400).send(err);
-    } finally {
-        client.release();
     }
 };
 const edit = async (req, resp) => {
@@ -157,8 +152,6 @@ const getReplies = async (req, resp) => {
     } catch (err) {
         console.trace(err);
         resp.status(400).send(err);
-    } finally {
-        client.release();
     }
 };
 

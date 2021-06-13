@@ -20,8 +20,6 @@ const addPost = async (req, resp) => {
   } catch (err) {
     console.error(err);
     resp.status(400).send();
-  } finally {
-    client.release();
   }
 };
 
@@ -50,8 +48,6 @@ const addReply = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 
@@ -68,13 +64,10 @@ const editReply = async (req, resp) => {
   } catch (err) {
     console.error(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 
 const getPosts = async (req, resp) => {
-  const clientread = await poolread.connect();
   try {
     const res = await poolread("posts")
       .join("contents", "posts.content_id", "contents.id")
@@ -84,8 +77,6 @@ const getPosts = async (req, resp) => {
     resp.status(200).json(res);
   } catch (err) {
     console.error(err);
-  } finally {
-    client.release();
   }
 };
 
@@ -114,8 +105,6 @@ const getThreadById = async (req, resp) => {
     resp.status(200).json(res);
   } catch (err) {
     console.error(err);
-  } finally {
-    client.release();
   }
 };
 
@@ -170,8 +159,6 @@ const deletePost = async (req, resp) => {
     }
   } catch (err) {
     console.error(err);
-  } finally {
-    client.release();
   }
 };
 
@@ -199,8 +186,6 @@ const likePost = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 
@@ -227,13 +212,10 @@ const likeReply = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 const unlikeReply = async (req, resp) => {
   const { replyId, userId } = req.body;
-  const clientwrite = await poolwrite.connect();
   try {
     await Promise.all([
       async () => {
@@ -255,14 +237,11 @@ const unlikeReply = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 const unlikePost = async (req, resp) => {
   const postId = parseInt(req.params.id, 10);
   const { userId } = req.body;
-  const clientwrite = await poolwrite.connect();
   try {
     await Promise.all([
       async () => {
@@ -282,15 +261,12 @@ const unlikePost = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 
 const deleteReply = async (req, resp) => {
   const postId = parseInt(req.params.id, 10);
   const { replyId } = req.body;
-  const clientwrite = await poolwrite.connect();
   try {
     const contentId = (
       await poolread("replies").where("id", replyId).select("content_id")
@@ -314,8 +290,6 @@ const deleteReply = async (req, resp) => {
   } catch (err) {
     console.trace(err);
     resp.status(400).send(err);
-  } finally {
-    client.release();
   }
 };
 
