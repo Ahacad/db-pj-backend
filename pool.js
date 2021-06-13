@@ -39,19 +39,21 @@ require("dotenv").config();
 const poolread = require("knex")({
   client: "mysql",
   connection: {
-    host: "127.0.0.1",
-    user: "ahacad",
-    password: "mysql",
-    database: "foo",
+    host: "124.71.134.211",
+    port: "3333",
+    user: "root",
+    password: "password",
+    database: "api",
   },
 });
 const poolwrite = require("knex")({
   client: "mysql",
   connection: {
-    host: "127.0.0.1",
-    user: "ahacad",
-    password: "mysql",
-    database: "foo",
+    host: "124.71.134.211",
+    port: "3334",
+    user: "root",
+    password: "password",
+    database: "api",
   },
 });
 
