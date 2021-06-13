@@ -9,14 +9,14 @@ const fs = require("fs");
  */
 const port = 4000;
 const options = {
-  key: fs.readFileSync(`${__dirname}/localhost-key.pem`),
-  cert: fs.readFileSync(`${__dirname}/localhost.pem`),
+  key: fs.readFileSync(`${__dirname}/tmp/localhost.key`),
+  cert: fs.readFileSync(`${__dirname}/tmp/localhost.crt`),
 };
 const app = require("../app");
 
 const server = https.createServer(options, app);
 server.listen(port, () => {
-  console.log(`server running on port $ { port }`);
+  console.log(`server running on port ${port}`);
 });
 
 /*
