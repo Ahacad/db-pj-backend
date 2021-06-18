@@ -43,9 +43,11 @@ const addReply = async (req, resp) => {
     const [tmp] = await poolread("posts")
       .where("id", postId)
       .select("replycount");
-    await poolwrite.where("id", postId).update({
-      replycount: tmp.replycount + 1,
-    });
+    await poolwrite("posts")
+      .where("id", postId)
+      .update({
+        replycount: tmp.replycount + 1,
+      });
 
     resp.status(201).json(res);
   } catch (err) {
