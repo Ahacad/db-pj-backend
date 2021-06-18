@@ -28,9 +28,12 @@ const addReply = async (req, resp) => {
   const { userId, content } = req.body;
   const createTime = new Date().toISOString();
   try {
-    const [contentId] = await poolwrite("contents").insert({
+    await poolwrite("contents").insert({
       content,
     });
+    const contentId = (
+      await poolread("contents").where("content", content).select("id")
+    )[0].id;
     const res = await poolwrite("replies").insert({
       userid: userId,
       post_id: postId,
