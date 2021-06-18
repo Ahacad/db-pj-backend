@@ -42,14 +42,22 @@ const createUser = async (req, resp) => {
     .toString("hex");
   // TODO: there can only be one distinct email in database
   try {
-    const res = poolwrite("users").insert({
+    await poolwrite("users").insert({
       name,
       email,
       password: saltedPassword,
       create_time: createTime,
       user_type: 1,
     });
-    resp.status(201).json("inserted");
+    const id = (
+      await poolread("users")
+        .where({
+          name,
+          email,
+        })
+        .select("id")
+    )[0];
+    resp.status(201).json(id);
   } catch (err) {
     console.error(err);
     resp.status(400).send();
