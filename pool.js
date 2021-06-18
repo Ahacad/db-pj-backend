@@ -36,7 +36,7 @@ require("dotenv").config();
 //});
 
 // FIXME: change database configs
-const poolread = require("knex")({
+const poolwrite = require("knex")({
   client: "mysql",
   connection: {
     host: "124.71.134.211",
@@ -46,7 +46,7 @@ const poolread = require("knex")({
     database: "api",
   },
 });
-const poolwrite = require("knex")({
+const poolread = require("knex")({
   client: "mysql",
   connection: {
     host: "124.71.134.211",
